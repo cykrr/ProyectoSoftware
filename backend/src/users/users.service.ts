@@ -1,0 +1,130 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Student, Teacher, User } from './user.entity';
+import * as bcrypt from 'bcryptjs';
+import { CreateStudentDto } from './create-student.dto';
+import { CreateTeacherDto } from './create-teacher.dto';
+import { Course } from 'src/courses/course.entity';
+
+@Injectable()
+export class UsersService {
+  addTeacherCourse(teacher: Teacher, course: Course) {
+    if (teacher.assignedCourses == null) {
+      teacher.assignedCourses = [];
+    }
+    teacher.assignedCourses.push(course);
+    this.teacherRepo.save(teacher);
+  }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+
+    @InjectRepository(Student)
+    private studentRepo: Repository<Student>,
+
+    @InjectRepository(Teacher)
+    private teacherRepo: Repository<Teacher>,
+  ) {}
+
+  async getRole(id: number): Promise<string> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (user instanceof Student) {
+      return 'Student';
+    } else if (user instanceof Teacher) {
+      return 'Teacher';
+    }
+    return 'unknown';
+  }
+
+  async findTeacher(id: number): Promise<Teacher | null> {
+    // Also get course data
+    return await this.teacherRepo.findOne({
+      where: { id },
+      relations: [
+        'assignedCourses',
+        'assignedCourses.topic.grade',
+        'assignedCourses.topic.grade.students',
+        'assignedCourses.assignedTeacher',
+      ],
+    });
+  }
+
+  async createTeacher(arg0: CreateTeacherDto) {
+    const passwordHash = this.hashPassword(arg0.password);
+    if (await this.exists(arg0.rut)) {
+      console.log('User already exists');
+      return;
+      // throw new Error('User already exists');
+    }
+
+    const teacher = this.teacherRepo.create({
+      firstName: arg0.firstName,
+      lastName: arg0.lastName,
+      rut: arg0.rut,
+      passwordHash,
+    });
+
+    return await this.teacherRepo.save(teacher);
+  }
+
+  async createStudent(arg0: CreateStudentDto) {
+    if (await this.exists(arg0.rut)) {
+      console.log('User already exists');
+      return;
+      throw new Error('User already exists');
+    }
+    const u = this.studentRepo.create({
+      firstName: arg0.firstName,
+      lastName: arg0.lastName,
+      rut: arg0.rut,
+      passwordHash: this.hashPassword(arg0.password),
+      grade: arg0.grade,
+    });
+
+    return await this.studentRepo.save(u);
+  }
+
+  async find(id: number): Promise<User> {
+    try {
+      const student = await this.studentRepo.findOneBy({ id });
+      const teacher = await this.teacherRepo.findOneBy({ id });
+      return student || teacher;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  findByRut(rut: number): Promise<User | null> {
+    return this.userRepository.findOne({ where: { rut } });
+  }
+
+  async findStudent(id: number): Promise<Student | null> {
+    const user = await this.studentRepo.findOneBy({ id });
+    // return this.studentRepo.findOneBy({ user: user });
+    return user;
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.userRepository.delete(id);
+  }
+
+  hashPassword(password: string): string {
+    return bcrypt.hashSync(password, 10);
+  }
+
+  verifyPassword(password: string, hash: string): boolean {
+    const val = bcrypt.compareSync(password, hash);
+    return val;
+  }
+
+  async exists(rut: number): Promise<boolean> {
+    return this.userRepository.findOne({ where: { rut } }).then((res) => {
+      if (res) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+}

@@ -1,0 +1,27 @@
+<div id="main" class='flex flex-row m-2.5 gap-2'>
+  <div class='flex flex-col min-w-48 gap-2'>
+
+      <div class="bg-blue-100 font-bold text-lg p-2">
+        Tus cursos
+      </div>
+
+      <div class="flex flex-col gap-1 align-middle">
+        <div *ngFor="let course of teacher?.assignedCourses" class="flex flex-row gap-2">
+          <div [ngClass]="{'bg-blue-400 font-bold': selectedCourse === course.id, 'bg-blue-200': selectedCourse !== course.id}"
+               class="cursor-pointer w-full px-2"
+               (click)="onCourseClick(course)"
+               id="{{course.id}}">
+            {{course.name + ' - ' + course.topic?.grade?.grade + ' ' + course.topic?.grade?.gradePoint}}
+          </div>
+        </div>
+        <a routerLink="new-course" class="bg-blue-400 font-bold cursor-pointer w-full px-2">
+          Nuevo
+        </a>
+      </div>
+  </div>
+  <app-teacher-course
+    *ngIf="getSelectedCourse() != null"
+    [course]="getSelectedCourse()"
+    class="w-full"
+    />
+</div>

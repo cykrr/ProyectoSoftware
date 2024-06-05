@@ -1,0 +1,104 @@
+<div class="popup" [hidden]="!showPopup">
+  <div class="popup-overlay fixed inset-0 bg-black opacity-50 z-50"></div>
+  <div class="popup-content fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-400 h-200 rounded-md shadow-lg z-50">
+    <form class="upload-form p-5" [formGroup]="fileUploadForm" (ngSubmit)="onFileUploadFormSubmit()">
+      <h2 class="text-2xl font-bold mb-4">Carga de archivo</h2>
+      <div class="form-group">
+        <label for="file" class="text-sm">Seleccionar:</label>
+        <input
+            class="border-0 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-1"
+            type="file" id="file" name="file" placeholder="Seleccione un archivo"
+            (change)="onFileChange($event)"
+        />
+        <label for="name" class="text-sm">Nombre:</label>
+        <input
+            class="border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-2"
+            type="text" id="name" name="name" formControlName="name" placeholder="Ingrese nombre del archivo (opcional)"
+        />
+
+      </div>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md mt-4">Cargar</button>
+    </form>
+    <button type="button" class="close-button absolute top-2 right-2 text-gray-500 hover:text-gray-700" (click)="showPopup = false">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<form class="p-5" [formGroup]="newCourseForm" (ngSubmit)="onFormSubmit()">
+  <div class="flex w-full h-full">
+    <div class="flex flex-col max-w-[350px] h-full gap-2.5 p-5  ">
+      <div class="font-bold text-2xl ">
+        Creación de curso
+      </div>
+      <div>Nombre del curso</div>
+      <input type="text" id="name"
+        formControlName="name"
+        class="border-2 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="Ingrese nombre del curso" required />
+      <div>Curso</div>
+      <select id="grade"
+        formControlName="grade"
+        type="number"
+        inputmode="numeric"
+        class="bg-transparent border-2 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        (change)="onGradeChange($event)" required>
+        <option value="-1">Seleccione un curso</option>
+        <option
+          *ngFor="let grade of gradeData"
+           value="{{grade.id}}">
+           {{grade.grade + ' ' + grade.gradePoint}}
+        </option>
+      </select>
+      <div>Materia</div>
+      <select id="topic"
+        type="number"
+        inputmode="numeric"
+        formControlName="topic"
+        class="bg-transparent border-2 border-gray-300 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        (class)="{'text-gray-200': selectedGrade === undefined}"
+        required>
+        <option disabled selected value="-1"
+          (class)="{'text-gray-200': selectedGrade === undefined}">
+          Escoja una Materia
+        </option>
+        <option *ngFor="let topic of selectedGrade?.topics" value="{{topic.id}}">{{topic.name}}</option>
+      </select>
+      <div class="flex gap-2 h-12 whitespace-nowrap ">
+        <input type="submit" value="Finalizar"
+          class="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded-2xl ease-out duration-100" />
+        <button type="button"
+          class="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded-2xl ease-out duration-100"
+          (click)="_location.back()">
+          Volver
+        </button>
+        <button type="button"
+          class="bg-purple-500 hover:bg-purple-700 text-white  py-2 px-4 rounded-2xl ease-out duration-100"
+          (click)="showPopup = true">
+          Subir archivo
+        </button>
+    </div>
+
+      </div>
+    <div class="flex flex-col w-full">
+      <div>Documentos a importar</div>
+      <div class="flex flex-col w-full h-full p-1">
+        <div class="flex flex-col w-full h-full p-5 rounded-md border-gray-300 border-2" >
+          <form [formGroup]="attachFilesForm">
+            <div class="flex items-center mb-4" *ngFor="let file of this.tmpFiles">
+              <input id="checkbox-{{file.id}}" type="checkbox" value="" formControlName="checkbox-file.{{file.id}}"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+              <label for="checkbox-{{file.id}}"
+                class="ms-2 text-sm text-gray-900">
+                  {{file.name}}
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
