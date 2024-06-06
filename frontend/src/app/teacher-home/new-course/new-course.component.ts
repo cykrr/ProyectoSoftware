@@ -6,16 +6,19 @@ import { GradeModule } from '../../grade/grade.module';
 import { GradeService } from '../../grade/grade.service';
 import { UserService } from '../../user/user.service';
 import { UserInfoDto } from '../../dtos/user_info.dto';
-import { GradeDto } from '../../dtos/grade.dto';
+import { GradeDto, TopicDto } from '../../dtos/grade.dto';
 import { FilesService } from '../../files.service';
 import { toFormData } from '../../common';
 import { FileDto } from '../../dtos/file.dto';
+import { CourseService } from '../../course.service';
+import { UnidadDto } from '../../dtos/unidad.dto';
+import { TopicService } from '../../topic.service';
 
 @Component({
   selector: 'app-new-course',
   standalone: true,
   imports: [GradeModule, NgFor, ReactiveFormsModule, NgClass, CommonModule],
-  providers: [GradeService, FormBuilder, UserService],
+  providers: [GradeService, FormBuilder, UserService, CourseService],
   templateUrl: './new-course.component.html',
   styleUrl: './new-course.component.css'
 })
@@ -25,6 +28,9 @@ export class NewCourseComponent {
   selectedGradeId: number | undefined;
   selectedGrade: GradeDto | undefined;
   tmpFiles: FileDto[] = [];
+  unidades: UnidadDto[] | undefined;
+  selectedTopicId: number | undefined;
+  selectedTopic: TopicDto | undefined;
 
   attachFilesForm = this.formBuilder.group({})
 
@@ -38,6 +44,7 @@ export class NewCourseComponent {
   fileUploadForm = this.formBuilder.group({
     name: '',
     file: Blob,
+    unidad: 'SIN_UNIDAD',
   })
   showPopup: boolean = false;
   file: File | undefined | null;
@@ -48,6 +55,8 @@ export class NewCourseComponent {
     private router: Router,
     public _location: Location,
     private fileService: FilesService,
+    private courseService: CourseService,
+    private topicService: TopicService,
 
   ) {
     console.log("init")
@@ -60,6 +69,11 @@ export class NewCourseComponent {
       this.userData = res!;
     });
 
+  }
+
+  onTopicChange($event: Event) {
+    this.selectedTopicId = Number(($event.target as HTMLSelectElement).value);
+    this.selectedTopic = this.gradeData?.topics?.
   }
 
   onFileChange(ev: Event) {
@@ -84,21 +98,38 @@ export class NewCourseComponent {
     console.log(formData);
     this.fileService.uploadFile(formData).subscribe((res) => {
       if (res.success) {
-        // Store the file in RAM
-        this.tmpFiles.push(res.document);
+        // // Store the file in RAM
+        // this.tmpFiles.push(res.document);
         // Hide the popup
         this.showPopup = false;
         // Rebuild the formgroup
         this.attachFilesForm = this.formBuilder.group({});
         this.tmpFiles.forEach((file) => {
-          this.attachFilesForm.addControl(`checkbox-file.${file.id}`, this.formBuilder.control(false));
+            this.attachFilesForm.addControl(`checkbox-file.${file.id}`, this.formBuilder.control(false));
         });
+        // Check if unidad exists
+        console.log("Buscando unidad")
+        let unidad = this.unidades?.find((unidad) => unidad.name === this.fileUploadForm.value.unidad);
+        if (!unidad) {
+          console.log(" unidad no existe, creando")
+          unidad = {
+            id: -1,
+            name: this.fileUploadForm.value.unidad!,
+            files: [res.document],
+          }
+          this.unidades?.push(unidad);
+        }
+        unidad?.files?.push(res.document);
+        console.log(this.unidades);
+
+
+
       }
-    })
+    });
   }
 
-  updateCourseFiles() {
-    this.courseService.updateCourseFiles(this.selectedCourseId!, this.tmpFiles.filter((file) => this.attachFilesForm.value[`checkbox-file.${file.id}`]))
+  updateCourseFiles(courseId: number) {
+    // const selectedCourses = Object.keys(this.attachFilesForm.value).filter((key) => this.attachFilesForm.value[key]);
   }
 
   onFormSubmit() {
@@ -124,7 +155,7 @@ export class NewCourseComponent {
     ).subscribe((res) => {
       if(res.success) {
         console.log('Course created');
-        this.updateCourseFiles()
+        // this.updateCourseFiles()
         this.router.navigate(['/home']);
       } else {
         alert(res.message);

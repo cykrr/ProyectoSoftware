@@ -24,4 +24,5 @@ export class TopicService {
   async update(topic: Topic): Promise<Topic> {
     return this.topicRepository.save(topic);
   }
+
 }

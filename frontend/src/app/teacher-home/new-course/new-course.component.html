@@ -9,11 +9,17 @@
             class="border-0 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-1"
             type="file" id="file" name="file" placeholder="Seleccione un archivo"
             (change)="onFileChange($event)"
+            required
         />
         <label for="name" class="text-sm">Nombre:</label>
         <input
-            class="border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full py-2"
+            class="border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
             type="text" id="name" name="name" formControlName="name" placeholder="Ingrese nombre del archivo (opcional)"
+        />
+        <label for="name" class="text-sm">Unidad:</label>
+        <input
+            class="border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+            type="text" id="unidad" name="unidad" formControlName="unidad" placeholder="Unidad" required
         />
 
       </div>
@@ -59,12 +65,14 @@
         formControlName="topic"
         class="bg-transparent border-2 border-gray-300 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         (class)="{'text-gray-200': selectedGrade === undefined}"
+        (change)="onTopicChange($event)"
         required>
         <option disabled selected value="-1"
           (class)="{'text-gray-200': selectedGrade === undefined}">
           Escoja una Materia
         </option>
         <option *ngFor="let topic of selectedGrade?.topics" value="{{topic.id}}">{{topic.name}}</option>
+
       </select>
       <div class="flex gap-2 h-12 whitespace-nowrap ">
         <input type="submit" value="Finalizar"
@@ -87,13 +95,16 @@
       <div class="flex flex-col w-full h-full p-1">
         <div class="flex flex-col w-full h-full p-5 rounded-md border-gray-300 border-2" >
           <form [formGroup]="attachFilesForm">
-            <div class="flex items-center mb-4" *ngFor="let file of this.tmpFiles">
-              <input id="checkbox-{{file.id}}" type="checkbox" value="" formControlName="checkbox-file.{{file.id}}"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-              <label for="checkbox-{{file.id}}"
-                class="ms-2 text-sm text-gray-900">
-                  {{file.name}}
-              </label>
+              <div *ngFor = "let unidad of this.unidades">
+                <label class="ms-2 text-sm text-gray-900">{{unidad.name}}</label>
+                <div class="flex items-center mb-4" *ngFor="let file of unidad.files">
+                  <input id="checkbox-{{file.id}}" type="checkbox" value="" formControlName="checkbox-file.{{file.id}}"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                  <label for="checkbox-{{file.id}}"
+                    class="ms-2 text-sm text-gray-900">
+                      {{file.name}}
+                  </label>
+                </div>
             </div>
           </form>
         </div>

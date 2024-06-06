@@ -1,3 +1,4 @@
+import { MDocument } from 'src/document/mdocument.entity';
 import { Topic } from 'src/topic/topic.entity';
 import { Teacher } from 'src/users/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity()
@@ -42,4 +44,7 @@ export class Unidad {
 
   @ManyToOne(() => Course, (course) => course.unidades)
   course: Course;
+
+  @ManyToMany(() => MDocument, (document) => document.unidad)
+  documents: MDocument[];
 }

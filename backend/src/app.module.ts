@@ -20,7 +20,7 @@ import { AppController } from './app.controller';
 import { TopicService } from './topic/topic.service';
 import { UsersController } from './users/users.controller';
 import { GradeController } from './grade/grade.controller';
-import { InjectConnection, InjectModel, MongooseModule } from '@nestjs/mongoose';
+import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { CourseController } from './courses/courses.controller';
 import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
@@ -28,6 +28,7 @@ import { SessionService } from './session/session.service';
 import { SessionModule } from './session/session.module';
 import { FilesModule } from './files/files.module';
 import { Connection } from 'mongoose';
+import { MDocument } from './document/mdocument.entity';
 
 @Module({
   imports: [
@@ -38,7 +39,17 @@ import { Connection } from 'mongoose';
       username: 'root',
       password: '',
       database: 'nest',
-      entities: [User, Teacher, Student, Course, Unidad, Session, Grade, Topic],
+      entities: [
+        MDocument,
+        User,
+        Teacher,
+        Student,
+        Course,
+        Unidad,
+        Session,
+        Grade,
+        Topic,
+      ],
       synchronize: true, // TODO: Don't use in prod.
     }),
     MongooseModule.forRoot('mongodb://localhost/nest'),
