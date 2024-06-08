@@ -15,7 +15,7 @@ export class HomeComponent {
       private router: Router,
       private userService: UserService
     ) {
-      console.log("home component")
+      // console.log("home component")
       this.userService.getUserInfo()
       .subscribe((res) => {
         console.log(res)

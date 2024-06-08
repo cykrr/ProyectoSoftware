@@ -1,5 +1,5 @@
 import { MDocument } from 'src/document/mdocument.entity';
-import { Topic } from 'src/topic/topic.entity';
+import { Topic, Unidad } from 'src/topic/topic.entity';
 import { Teacher } from 'src/users/user.entity';
 import {
   Entity,
@@ -8,8 +8,8 @@ import {
   ManyToOne,
   OneToOne,
   JoinColumn,
-  OneToMany,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -30,21 +30,22 @@ export class Course {
   @JoinColumn()
   topic: Topic;
 
-  @OneToMany(() => Unidad, (unidad) => unidad.course)
-  unidades: Unidad[];
-}
-
-@Entity()
-export class Unidad {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
-
-  @ManyToOne(() => Course, (course) => course.unidades)
-  course: Course;
-
-  @ManyToMany(() => MDocument, (document) => document.unidad)
+  @ManyToMany(() => MDocument, { cascade: false })
+  @JoinTable()
   documents: MDocument[];
+
+  get unidades(): Unidad[] {
+    // Use a Set to ensure uniqueness of unidades
+    const unidadesSet = new Set<Unidad>();
+    
+    // Iterate over documents and add their unidades to the Set
+    this.documents.forEach(document => {
+      if (document.unidad) {
+        unidadesSet.add(document.unidad);
+      }
+    });
+
+    // Convert the Set to an array and return
+    return Array.from(unidadesSet);
+  }
 }

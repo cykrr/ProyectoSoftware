@@ -7,7 +7,7 @@
 
       <div class="flex flex-col gap-1 align-middle">
         <div *ngFor="let course of teacher?.assignedCourses" class="flex flex-row gap-2">
-          <div [ngClass]="{'bg-blue-400 font-bold': selectedCourse === course.id, 'bg-blue-200': selectedCourse !== course.id}"
+          <div [ngClass]="{'bg-blue-400 font-bold': selectedCourseId === course.id, 'bg-blue-200': selectedCourseId !== course.id}"
                class="cursor-pointer w-full px-2"
                (click)="onCourseClick(course)"
                id="{{course.id}}">
@@ -20,8 +20,9 @@
       </div>
   </div>
   <app-teacher-course
-    *ngIf="getSelectedCourse() != null"
-    [course]="getSelectedCourse()"
+    *ngIf="this.selectedCourse !== undefined"
+    [course]="this.selectedCourse"
     class="w-full"
+    (shouldReload)="shouldReload($event)"
     />
 </div>

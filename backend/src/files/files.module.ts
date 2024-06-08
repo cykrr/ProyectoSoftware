@@ -10,5 +10,8 @@ import { FilesController } from './files.controller';
   ],
   providers: [FilesService],
   controllers: [FilesController],
+  exports: [
+    MongooseModule.forFeature([{ name: MFile.name, schema: MFileSchema }]),
+  ],
 })
 export class FilesModule {}

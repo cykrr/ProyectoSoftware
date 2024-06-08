@@ -1,0 +1,53 @@
+<div class="popup" [hidden]="!show">
+  <div class="popup-overlay fixed inset-0 bg-black opacity-50 z-50"></div>
+  <div class="popup-content fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-400 h-200 rounded-md shadow-lg z-50">
+    <form class="upload-form p-5" [formGroup]="addFileForm" (ngSubmit)="onAddFileFormSubmit($event)">
+      <h2 class="text-2xl font-bold mb-4">Carga de archivo</h2>
+      <div class="form-group">
+
+        <label for="file" class="text-sm">Seleccionar:</label>
+        <input
+            class="border-0 text-gray-900 text-sm rounded-md \
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-1"
+            type="file" id="file" name="file" placeholder="Seleccione un archivo"
+            (change)="onFileChange($event)" id="file" name="file" formControlName="file"
+            required
+        />
+
+        <label for="name" class="text-sm">Nombre:</label>
+        <input
+          class="border border-gray-300 text-gray-900 text-sm rounded-md \
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+           type="text" id="name" name="name" formControlName="name"
+           placeholder="Ingrese nombre del archivo (opcional)"
+        />
+
+        <label for="unidad" class="text-sm">Unidad:</label>
+        <select
+          class="border border-gray-300 text-gray-900 text-sm rounded-md \
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+           (change) = "onUnidadChange($event)"
+           id="selectUnidad" name="selectUnidad" formControlName="selectUnidad" required>
+
+          <option *ngFor="let unidad of topic?.unidades" [value]="unidad.id">{{ unidad.name }}</option>
+          <option value="new">Nueva unidad</option>
+        </select>
+      </div>
+
+      <input
+        *ngIf="showUnidadInput"
+        class="border border-gray-300 text-gray-900 text-sm rounded-md \
+          focus:ring-blue-500 focus:border-blue-500 block w-full p-2 mt-4"
+          type="text" id="inputUnidad" name="inputUnidad" formControlName="inputUnidad"
+          placeholder="Nombre de la nueva unidad"
+      />
+
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md mt-4">Cargar</button>
+    </form>
+    <button type="button" class="close-button absolute top-2 right-2 text-gray-500 hover:text-gray-700" (click)="hide()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>

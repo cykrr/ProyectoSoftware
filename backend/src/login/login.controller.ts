@@ -11,13 +11,13 @@ export class LoginController {
   ) {}
 
   @Post()
-  async login(@Body() data: LoginDto): Promise<string> {
-    console.log("post")
+  async login(@Body() data: LoginDto): Promise<object> {
     const rut = data.rut;
     const password = data.password;
     if (!rut || !password) {
-      return JSON.stringify({ success: false, message: 'Invalid data' });
+      return { success: false, message: 'Invalid data' };
     }
-    return JSON.stringify(await this.loginService.login(rut, password));
+    const d = await this.loginService.login(rut, password);
+    return { success: true, data: d };
   }
 }

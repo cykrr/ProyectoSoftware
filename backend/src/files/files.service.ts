@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { MFile, MFileDocument } from './mfile.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class FilesService {
   constructor(@InjectModel(MFile.name) private mfileModel: Model<MFile>) {}
+
+  async find(fileid: Types.ObjectId): Promise<MFileDocument> {
+    return this.mfileModel.findById(fileid).exec();
+  }
+
   async create(
     filename: string,
     contentType: string,

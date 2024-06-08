@@ -8,14 +8,14 @@ import { Student, Teacher, User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 
 import { CoursesModule } from './courses/courses.module';
-import { Course, Unidad } from './courses/course.entity';
+import { Course } from './courses/course.entity';
 import { Session } from './session/session.entity';
 import { GradeModule } from './grade/grade.module';
 import { Grade } from './grade/grade.entity';
 import { GradeService } from './grade/grade.service';
 import { CoursesService } from './courses/courses.service';
 import { UsersService } from './users/users.service';
-import { Topic } from './topic/topic.entity';
+import { Topic, Unidad } from './topic/topic.entity';
 import { AppController } from './app.controller';
 import { TopicService } from './topic/topic.service';
 import { UsersController } from './users/users.controller';
@@ -29,6 +29,11 @@ import { SessionModule } from './session/session.module';
 import { FilesModule } from './files/files.module';
 import { Connection } from 'mongoose';
 import { MDocument } from './document/mdocument.entity';
+import { TopicModule } from './topic/topic.module';
+import { TopicController } from './topic/topic.controller';
+import { FilesController } from './files/files.controller';
+import { FilesService } from './files/files.service';
+import { DocumentService } from './document/document.service';
 
 @Module({
   imports: [
@@ -40,19 +45,20 @@ import { MDocument } from './document/mdocument.entity';
       password: '',
       database: 'nest',
       entities: [
-        MDocument,
         User,
         Teacher,
         Student,
         Course,
-        Unidad,
         Session,
         Grade,
+        MDocument,
+        Unidad,
         Topic,
       ],
       synchronize: true, // TODO: Don't use in prod.
     }),
     MongooseModule.forRoot('mongodb://localhost/nest'),
+
     UsersModule,
     CoursesModule,
     GradeModule,
@@ -64,9 +70,11 @@ import { MDocument } from './document/mdocument.entity';
     CoursesService,
     GradeService,
     AppService,
-    TopicService,
     LoginService,
     SessionService,
+    TopicService,
+    FilesService,
+    DocumentService
   ],
   controllers: [
     AppController,
@@ -74,6 +82,8 @@ import { MDocument } from './document/mdocument.entity';
     GradeController,
     CourseController,
     LoginController,
+    TopicController,
+    FilesController,
   ],
 })
 export class AppModule {

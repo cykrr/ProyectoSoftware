@@ -28,7 +28,7 @@ export class LoginComponent {
   })
 
   onSubmit() {
-    console.log("submit")
+    // console.log("submit")
     const response = this.loginService.login(this.loginForm.value.rut!, this.loginForm.value.password!)
     response.subscribe({
       error: (err) => {
@@ -37,8 +37,8 @@ export class LoginComponent {
       },
       next: (res) => {
         if (res?.success) {
-          localStorage.setItem('token', res.token!)
-          localStorage.setItem('uid', res.uid!)
+          localStorage.setItem('token', res.data.token!)
+          localStorage.setItem('uid', res.data.uid!)
           this.router.navigate(['/home'])
         } else {
           alert(res?.message)

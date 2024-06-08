@@ -8,16 +8,17 @@ import { UserService } from '../../user/user.service';
 import { UserInfoDto } from '../../dtos/user_info.dto';
 import { GradeDto, TopicDto } from '../../dtos/grade.dto';
 import { FilesService } from '../../files.service';
-import { toFormData } from '../../common';
-import { FileDto } from '../../dtos/file.dto';
 import { CourseService } from '../../course.service';
 import { UnidadDto } from '../../dtos/unidad.dto';
 import { TopicService } from '../../topic.service';
+import { AddFileComponent } from '../add-file/add-file.component';
+import { DocumentDto } from '../../dtos/new-file.dto';
+
 
 @Component({
   selector: 'app-new-course',
   standalone: true,
-  imports: [GradeModule, NgFor, ReactiveFormsModule, NgClass, CommonModule],
+  imports: [GradeModule, NgFor, ReactiveFormsModule, NgClass, CommonModule, AddFileComponent],
   providers: [GradeService, FormBuilder, UserService, CourseService],
   templateUrl: './new-course.component.html',
   styleUrl: './new-course.component.css'
@@ -27,12 +28,10 @@ export class NewCourseComponent {
   gradeData: GradeDto[] | undefined;
   selectedGradeId: number | undefined;
   selectedGrade: GradeDto | undefined;
-  tmpFiles: FileDto[] = [];
-  unidades: UnidadDto[] | undefined;
   selectedTopicId: number | undefined;
   selectedTopic: TopicDto | undefined;
 
-  attachFilesForm = this.formBuilder.group({})
+  attachFilesForm= this.formBuilder.group({});
 
 
   newCourseForm = this.formBuilder.group({
@@ -48,6 +47,7 @@ export class NewCourseComponent {
   })
   showPopup: boolean = false;
   file: File | undefined | null;
+  tmpDocs: DocumentDto[] = [];
   constructor(
     private gradeService: GradeService,
     private formBuilder: FormBuilder,
@@ -61,77 +61,60 @@ export class NewCourseComponent {
   ) {
     console.log("init")
     this.gradeService.getGrades()
-    .subscribe((res) => {
-      console.log(res);
-      this.gradeData = res;
-    });
+      .subscribe((res) => {
+        console.log(res);
+        this.gradeData = res.data;
+      });
     this.userService.getUserInfo().subscribe((res) => {
       this.userData = res!;
     });
 
   }
 
-  onTopicChange($event: Event) {
-    this.selectedTopicId = Number(($event.target as HTMLSelectElement).value);
-    this.selectedTopic = this.gradeData?.topics?.
+  onTopicChange(event: Event) {
+    this.selectedTopicId = Number((event.target as HTMLSelectElement).value);
+    console.log(this.selectedTopicId)
+    this.selectedTopic = this.selectedGrade?.topics?.find((topic) => topic.id === this.selectedTopicId);
+    this.tmpDocs = [];
+    for (let unidad of this.selectedTopic?.unidades!) {
+      for (let file of unidad.documents!) {
+        this.attachFilesForm.addControl(`checkbox-file.${file.fileid}`, this.formBuilder.control(false));
+      }
+    }
+
+    console.log(this.selectedTopic)
   }
 
-  onFileChange(ev: Event) {
-    const target = ev.target as HTMLInputElement;
-    const file = target.files?.item(0);
-    if (file) {
-      this.file = file;
-      console.log(file)
-    }
+  shouldReload() {
+    console.log("should reload")
   }
+
 
   onFileUploadButtonClick() {
     this.showPopup = true;
   }
 
-  onFileUploadFormSubmit() {
-    console.log(this.fileUploadForm.value)
-    const formData = new FormData();
-    formData.append('file', this.file!);
-    const name = this.fileUploadForm.value.name;
-    formData.append('name', name != '' ? name! : this.file!.name);
-    console.log(formData);
-    this.fileService.uploadFile(formData).subscribe((res) => {
-      if (res.success) {
-        // // Store the file in RAM
-        // this.tmpFiles.push(res.document);
-        // Hide the popup
-        this.showPopup = false;
-        // Rebuild the formgroup
-        this.attachFilesForm = this.formBuilder.group({});
-        this.tmpFiles.forEach((file) => {
-            this.attachFilesForm.addControl(`checkbox-file.${file.id}`, this.formBuilder.control(false));
-        });
-        // Check if unidad exists
-        console.log("Buscando unidad")
-        let unidad = this.unidades?.find((unidad) => unidad.name === this.fileUploadForm.value.unidad);
-        if (!unidad) {
-          console.log(" unidad no existe, creando")
-          unidad = {
-            id: -1,
-            name: this.fileUploadForm.value.unidad!,
-            files: [res.document],
-          }
-          this.unidades?.push(unidad);
-        }
-        unidad?.files?.push(res.document);
-        console.log(this.unidades);
-
-
-
-      }
-    });
-  }
 
   updateCourseFiles(courseId: number) {
     // const selectedCourses = Object.keys(this.attachFilesForm.value).filter((key) => this.attachFilesForm.value[key]);
   }
 
+  onFileUploadSuccess(filedto: DocumentDto) {
+    console.log("NewCourse Upload success")
+    this.attachFilesForm.addControl(`checkbox-file.${filedto.fileid}`, this.formBuilder.control(false));
+
+    this.gradeService.getGrades().subscribe((res) => {
+      this.gradeData = res.data;
+      this.selectedGrade = this.gradeData?.find((grade) => grade.id === this.selectedGradeId);
+      this.selectedTopic = this.selectedGrade?.topics?.find((topic) => topic.id === this.selectedTopicId);
+      console.log(this.gradeData)
+    });
+
+
+  }
+
+  // Finalizar
+  // newCourseFormSubmit
   onFormSubmit() {
     console.log('Form submitted');
     if (this.newCourseForm.value.name == '') {
@@ -146,20 +129,35 @@ export class NewCourseComponent {
       alert('Por favor elija una materia');
       return;
     }
-    console.log(this.newCourseForm.value)
-    console.log(this.attachFilesForm.value)
+    const attachFiles: { documents: string[] } = { documents: [] }
+    Object.keys(this.attachFilesForm['value']).forEach((key, value) => {
+        if (value != 0)
+          attachFiles.documents.push(key.split('.')[1])
+    });
+    // console.log(this.newCourseForm.value)
+    // console.log(this.attachFilesForm.value)
+    // Create the course in the backend
+    console.log("[NewCourseComponent] Creando curso")
     this.gradeService.createCourse(
       this.newCourseForm.value.name!,
       this.newCourseForm.value.grade!,
       this.newCourseForm.value.topic!,
+      attachFiles
     ).subscribe((res) => {
-      if(res.success) {
-        console.log('Course created');
+      if (res.success) {
+        // if succeed
+
+        // console.log('Course created');
         // this.updateCourseFiles()
         this.router.navigate(['/home']);
+        // go back to home
+
       } else {
-        alert(res.message);
-        console.log(res.data)
+        if (!res.success) {
+          alert(res.message);
+          this.router.navigate(['/login'])
+        }
+        // console.log(res.data)
       }
       // this.router.navigate(['/home']);
     });
@@ -168,6 +166,6 @@ export class NewCourseComponent {
   onGradeChange($event: Event) {
     this.selectedGradeId = Number(($event.target as HTMLSelectElement).value);
     this.selectedGrade = this.gradeData?.find((grade) => grade.id === this.selectedGradeId);
-    console.log(this.selectedGrade);
+    // console.log(this.selectedGrade);
   }
 }

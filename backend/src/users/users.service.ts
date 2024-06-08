@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student, Teacher, User } from './user.entity';
@@ -10,6 +10,10 @@ import { Course } from 'src/courses/course.entity';
 @Injectable()
 export class UsersService {
   addTeacherCourse(teacher: Teacher, course: Course) {
+    if (!teacher) {
+      throw new NotFoundException("No existe el profesor")
+    }
+
     if (teacher.assignedCourses == null) {
       teacher.assignedCourses = [];
     }

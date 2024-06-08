@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserInfoDto } from '../dtos/user_info.dto';
 import { EMPTY, Observable, defaultIfEmpty, empty, map } from 'rxjs';
+import { apiUrl } from '../enviroment';
+import { ResponseDto } from '../dtos/response.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private url = "http://localhost:3000/"
 
   constructor(private http: HttpClient) { }
 
@@ -20,7 +21,7 @@ export class UserService {
       return EMPTY.pipe(defaultIfEmpty(null));
     }
     console.log(uid)
-    return this.http.get(`${this.url}user/`, {
+    return this.http.get(`${apiUrl}/user/`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -31,17 +32,11 @@ export class UserService {
   }
 
   getTeacherData(uid: string, token: string):
-   Observable<UserInfoDto> {
-    try {
-      return this.http.get(`${this.url}user/teacher`, {
+   Observable<ResponseDto<UserInfoDto>> {
+      return this.http.get<ResponseDto<UserInfoDto>>(`${apiUrl}/user/teacher`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      }).pipe(map((res): any => res))
-    } catch (e) {
-      console.log(e);
-      return new Observable<UserInfoDto>();
-    }
+      })
   }
-
 }

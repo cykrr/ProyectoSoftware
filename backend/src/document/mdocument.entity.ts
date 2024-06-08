@@ -1,5 +1,12 @@
-import { Unidad } from 'src/courses/course.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Course } from 'src/courses/course.entity';
+import { Unidad } from 'src/topic/topic.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class MDocument {
@@ -11,5 +18,8 @@ export class MDocument {
   fileid: string;
 
   @ManyToOne(() => Unidad, (unidad) => unidad.documents)
-  unidad: Unidad;
+  unidad?: Unidad;
+
+  @ManyToMany(() => Course, (course) => course.documents)
+  courses?: Course[];
 }

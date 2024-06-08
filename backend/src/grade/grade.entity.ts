@@ -1,4 +1,3 @@
-import { Course } from 'src/courses/course.entity';
 import { Topic } from 'src/topic/topic.entity';
 import { Student } from 'src/users/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';

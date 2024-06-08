@@ -1,7 +1,6 @@
-export interface LoginResponseDto {
+export interface ResponseDto <T> {
   success: boolean;
-  token?: string;
-  uid?: string;
-  role: string;
-  message?: string;
+  message: string;
+  data: T;
+
 }

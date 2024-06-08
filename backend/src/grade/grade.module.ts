@@ -10,14 +10,27 @@ import { TopicService } from 'src/topic/topic.service';
 import { TopicModule } from 'src/topic/topic.module';
 import { Topic } from 'src/topic/topic.entity';
 import { GradeController } from './grade.controller';
+import { DocumentModule } from 'src/document/document.module';
+import { DocumentService } from 'src/document/document.service';
+import { FilesService } from 'src/files/files.service';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Grade, Course, User, Teacher, Student, Topic]),
     TopicModule,
+    DocumentModule,
+    FilesModule,
   ],
-  providers: [GradeService, CoursesService, UsersService, TopicService],
-  exports: [TopicModule],
+  providers: [
+    GradeService,
+    CoursesService,
+    UsersService,
+    TopicService,
+    DocumentService,
+    FilesService,
+  ],
+  exports: [TopicModule, DocumentModule],
   controllers: [GradeController],
 })
 export class GradeModule {

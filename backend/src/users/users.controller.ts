@@ -13,9 +13,12 @@ export class UsersController {
   async find(@Headers() headers: Headers): Promise<string> {
     const token = headers['authorization'].split(' ')[1];
     const user = await this.tokenService.decodeToken(token);
-    console.log('User', user)
+    if (!user) {
+      return null
+    }
+    // console.log('User', user)
     const userObject = await this.usersService.find(user.userId);
-    console.log('User', userObject)
+    // console.log('User', userObject)
     const role = await this.usersService.getRole(user.userId);
     return JSON.stringify({
       ...userObject,
@@ -29,11 +32,14 @@ export class UsersController {
     const teacherObj = await this.usersService.findTeacher(user.userId);
     if (!teacherObj) {
       return JSON.stringify({
+        success: false,
         message: 'Teacher not found',
       });
     }
     return JSON.stringify({
-      ...teacherObj,
+      success: true,
+      message: 'Teacher found',
+      data: teacherObj,
     });
   }
 }

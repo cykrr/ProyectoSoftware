@@ -18,7 +18,9 @@ export class GradeService {
   ) {}
 
   async findAll(): Promise<Grade[]> {
-    return this.gradeRepository.find({ relations: ['topics'] });
+    return this.gradeRepository.find({
+      relations: ['topics.unidades.documents'],
+    });
   }
 
   async find(id: number): Promise<Grade> {

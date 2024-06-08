@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { TeacherCourseComponent } from './teacher-course/teacher-course.component';
 import { UserInfoDto } from '../dtos/user_info.dto';
 import { CourseDto } from '../dtos/course.dto';
+import { CourseService } from '../course.service';
+import { Observable, lastValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-teacher-home',
@@ -15,26 +17,37 @@ import { CourseDto } from '../dtos/course.dto';
 })
 export class TeacherHomeComponent {
 teacher: UserInfoDto | undefined;
-selectedCourse: number;
-  constructor(userService: UserService) {
-    this.selectedCourse = -1;
+selectedCourseId: number | undefined;
+selectedCourse: CourseDto|undefined;
+  constructor(userService: UserService, private courseService: CourseService, private router: Router) {
+    this.selectedCourseId = -1;
+    this.selectedCourse = undefined;
     try {
       userService.getTeacherData(localStorage.getItem('uid')!, localStorage.getItem('token')!).subscribe((res) => {
+        if(!res.success) {
+          alert(res.message)
+          router.navigate(['/login'])
+        }
+
         console.log(res);
-        this.teacher = res;
+        this.teacher = res.data;
       });
     } catch (e) {
       console.log(e);
     }
   }
-  onCourseClick(course: any) {
-    this.selectedCourse = course.id;
-    console.log(this.getSelectedCourse());
+  async onCourseClick(course: any) {
+    this.selectedCourseId = course.id;
+    this.selectedCourse = await lastValueFrom(this.courseService.getCourse(this.selectedCourseId!))
+    // console.log(this.selectedCourse)
+
+
+  }
+  async shouldReload(b: boolean) {
+    if (!b) return
+    console.log("reloading :3")
+    this.selectedCourse = await lastValueFrom(this.courseService.getCourse(this.selectedCourseId!))
   }
 
-  getSelectedCourse(): CourseDto|undefined
-  {
-    const course = this.teacher?.assignedCourses?.find((course) => course.id === this.selectedCourse);
-    return course;
-  }
+
 }

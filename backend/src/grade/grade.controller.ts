@@ -6,6 +6,9 @@ export class GradeController {
   constructor(private gradeService: GradeService) {}
   @Get()
   async getGrades() {
-    return this.gradeService.findAll();
+    return {
+      data: await this.gradeService.findAll(),
+      success: true,
+    };
   }
 }

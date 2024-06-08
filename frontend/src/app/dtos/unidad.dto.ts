@@ -1,7 +1,7 @@
-import { FileDto } from "./file.dto";
+import { DocumentDto } from "./new-file.dto";
 
 export class UnidadDto {
-  id: number | undefined;
+  id?: number | undefined;
   name: string | undefined;
-  files: FileDto[] | undefined;
+  documents?: DocumentDto[] | undefined;
 }

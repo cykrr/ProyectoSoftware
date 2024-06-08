@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { GradeDto } from '../dtos/grade.dto';
+import { ResponseDto } from '../dtos/response.dto';
 
 class Response<T> {
   success: boolean | undefined;
   message: string | undefined;
   data: T | undefined;
+  course: any;
 }
 
 class CourseDto {
@@ -19,27 +21,27 @@ class CourseDto {
   providedIn: 'root'
 })
 export class GradeService {
-  private url = "http://localhost:3000"
   constructor(private http: HttpClient) { }
 
-  getGrades(): Observable<GradeDto[]> {
-    console.log('getGrades');
+  getGrades(): Observable<ResponseDto<GradeDto[]>> {
     const token = localStorage.getItem('token');
     const uid = localStorage.getItem('uid');
-    return this.http.get('/api/grades', {
+    return this.http.get<ResponseDto<GradeDto[]>>('/api/grades', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
-    }).pipe(map((res): any => res))
+    })
   }
-  createCourse(name: string, grade: number, topic: number): Observable<Response<CourseDto>> {
+  createCourse(name: string, grade: number, topic: number, attachFilesForm: object): Observable<ResponseDto<CourseDto>> {
     const token = localStorage.getItem('token');
     const uid = Number.parseInt(localStorage.getItem('uid')!);
     return this.http.post(`/api/courses/`, {
+      //SendCreateCourseDto
       name,
       gradeId: grade,
       topicId: topic,
-      assignedTeacherId: uid
+      assignedTeacherId: uid,
+      attachFilesForm
     }, {
       headers: {
         'Authorization': `Bearer ${token}`

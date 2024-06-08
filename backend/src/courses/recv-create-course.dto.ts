@@ -12,4 +12,6 @@ export class RecvCreateCourseDto {
   @Transform(({ value }) => parseInt(value))
   @IsInt()
   gradeId: number;
+
+  attachFilesForm: { documents: string[] };
 }
