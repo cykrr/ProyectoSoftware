@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UnidadDto } from '../../dtos/unidad.dto';
 import { apiUrl } from '../../enviroment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faFilePdf, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { AddFileComponent } from '../add-file/add-file.component';
 import { DocumentDto } from '../../dtos/new-file.dto';
 import { Router } from '@angular/router';
@@ -23,6 +23,7 @@ export class TeacherCourseComponent {
   apiUrl: string = apiUrl;
   faEdit = faEdit
   faFilePdf = faFilePdf
+  faAngleRight = faAngleRight
   showAddContent: boolean = false;
   constructor(private router: Router) {
     if (!this.course?.documents) return
