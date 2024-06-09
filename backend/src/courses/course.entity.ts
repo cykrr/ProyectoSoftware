@@ -1,3 +1,4 @@
+import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
 import { MDocument } from 'src/document/mdocument.entity';
 import { Topic, Unidad } from 'src/topic/topic.entity';
 import { Teacher } from 'src/users/user.entity';
@@ -10,6 +11,7 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -34,18 +36,6 @@ export class Course {
   @JoinTable()
   documents: MDocument[];
 
-  get unidades(): Unidad[] {
-    // Use a Set to ensure uniqueness of unidades
-    const unidadesSet = new Set<Unidad>();
-    
-    // Iterate over documents and add their unidades to the Set
-    this.documents.forEach(document => {
-      if (document.unidad) {
-        unidadesSet.add(document.unidad);
-      }
-    });
-
-    // Convert the Set to an array and return
-    return Array.from(unidadesSet);
-  }
+  @OneToMany(() => CalendarEntry, (entry) => entry.course)
+  calendarEntries: CalendarEntry[];
 }

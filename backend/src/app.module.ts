@@ -34,6 +34,9 @@ import { TopicController } from './topic/topic.controller';
 import { FilesController } from './files/files.controller';
 import { FilesService } from './files/files.service';
 import { DocumentService } from './document/document.service';
+import { CalendarModule } from './calendar/calendar.module';
+import { CalendarEntry } from './calendar/calendar-entry.entity';
+import { CalendarService } from './calendar/calendar.service';
 
 @Module({
   imports: [
@@ -45,6 +48,7 @@ import { DocumentService } from './document/document.service';
       password: '',
       database: 'nest',
       entities: [
+        CalendarEntry,
         User,
         Teacher,
         Student,
@@ -64,6 +68,7 @@ import { DocumentService } from './document/document.service';
     GradeModule,
     SessionModule,
     FilesModule,
+    CalendarModule,
   ],
   providers: [
     UsersService,
@@ -74,7 +79,8 @@ import { DocumentService } from './document/document.service';
     SessionService,
     TopicService,
     FilesService,
-    DocumentService
+    DocumentService,
+    CalendarService,
   ],
   controllers: [
     AppController,

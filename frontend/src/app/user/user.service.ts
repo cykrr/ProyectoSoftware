@@ -20,15 +20,11 @@ export class UserService {
       console.log("[UserService] No token or uid found.")
       return EMPTY.pipe(defaultIfEmpty(null));
     }
-    console.log(uid)
-    return this.http.get(`${apiUrl}/user/`, {
+    return this.http.get<UserInfoDto>(`${apiUrl}/user/`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
-    }).pipe(
-      defaultIfEmpty(null),
-      map((res): any => res)
-    )
+    });
   }
 
   getTeacherData(uid: string, token: string):

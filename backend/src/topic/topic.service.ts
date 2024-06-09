@@ -11,6 +11,7 @@ import { FilesService } from 'src/files/files.service';
 import { Course } from 'src/courses/course.entity';
 import { MDocument } from 'src/document/mdocument.entity';
 import { UnidadAlreadyExistsError } from 'src/errors/unidad-already-exists.error';
+import { CalendarService } from 'src/calendar/calendar.service';
 
 class CreateUnidadDto {
   // id: number | undefined;
@@ -27,6 +28,7 @@ export class TopicService {
     private unidadRepository: Repository<Unidad>,
     private documentService: DocumentService,
     private filesService: FilesService,
+    private calendarService: CalendarService,
   ) {}
 
   async findDocument(id: string): Promise<MDocument> {

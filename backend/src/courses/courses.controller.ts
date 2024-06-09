@@ -87,10 +87,28 @@ export class CourseController {
       };
     }
     return {
-      ...course,
-      unidades: await this.courseService.obtenerUnidades(id),
+      success: true,
+      message: 'Course found',
+      data: {
+        ...course,
+        unidades: await this.courseService.obtenerUnidades(id),
+      },
     };
   }
+
+  @Get(':id/calendar')
+  async getCalendar(@Param('id') id: number): Promise<object> {
+    const course = await this.courseService.findCourse(id);
+    if (!course) {
+      throw new NotFoundException(`Course ${id} not found`);
+    }
+    return {
+      success: true,
+      data: course.calendarEntries,
+    };
+  }
+
+
   @Post(':id/addfile/:file_id')
   async addFileToCourse(
     @Param('id') courseId: number,

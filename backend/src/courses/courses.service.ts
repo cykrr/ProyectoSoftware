@@ -58,7 +58,12 @@ export class CoursesService {
   async findCourse(id: number): Promise<Course> {
     return this.courseRepository.findOne({
       where: { id },
-      relations: ['topic.unidades', 'assignedTeacher', 'topic.grade.students'],
+      relations: [
+        'topic.unidades',
+        'assignedTeacher',
+        'topic.grade.students',
+        'calendarEntries',
+      ],
     });
   }
 }

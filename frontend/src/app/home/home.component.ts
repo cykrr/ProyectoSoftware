@@ -17,15 +17,21 @@ export class HomeComponent {
     ) {
       // console.log("home component")
       this.userService.getUserInfo()
-      .subscribe((res) => {
-        console.log(res)
+      .subscribe({
+      next: (res) => {
+        // console.log(res)
         this.userData = res!;
         if (res?.role === 'Teacher') {
           this.router.navigate(['/home/teacher'])
         } else if (res?.role === 'Student') {
           this.router.navigate(['/home/student'])
         }
-      })
+      },
+      error: (err) => {
+        console.log(err);
+        router.navigate(['/login'])
+      }
+    })
 
 
     }

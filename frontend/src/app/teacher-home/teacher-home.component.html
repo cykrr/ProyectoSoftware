@@ -1,28 +1,21 @@
-<div id="main" class='flex flex-row m-2.5 gap-2'>
-  <div class='flex flex-col min-w-48 gap-2'>
-
-      <div class="bg-blue-100 font-semibold text-lg p-2">
-        Tus cursos
-      </div>
-
-      <div class="flex flex-col gap-1 align-middle">
-        <div *ngFor="let course of teacher?.assignedCourses" class="flex flex-row gap-2">
-          <div [ngClass]="{'bg-blue-400 font-semibold': selectedCourseId === course.id, 'bg-blue-200': selectedCourseId !== course.id}"
-               class="cursor-pointer w-full px-2"
-               (click)="onCourseClick(course)"
-               id="{{course.id}}">
-            {{course.name + '  ' + course.topic?.grade?.grade + '°' + course.topic?.grade?.gradePoint}}
-          </div>
-        </div>
-        <a routerLink="new-course" class="bg-blue-400 font-semibold cursor-pointer w-full px-2">
-          Nuevo
-        </a>
-      </div>
+<div id="main" class='flex flex-col m-2.5 gap-2'>
+  <label class="font-semibold text-2xl">Bienvenido {{this.teacher?.firstName}}!</label>
+  <p>Por favor, selecciona un curso de la lista.</p>
+  <div
+    class="bg-blue-100  p-2  cursor-pointer"
+    *ngFor="let curso of this.teacher?.assignedCourses"
+    >
+    <div [routerLink]="['/home/teacher/courses/' + curso.id?.toString()]">
+      <fa-icon [icon]="faAngleRight" class="cursor-pointer"></fa-icon>
+      <label class="cursor-pointer">
+        {{curso.name}}  {{curso.topic?.grade?.grade}}°{{curso.topic?.grade?.gradePoint}}
+      </label>
+    </div>
   </div>
-  <app-teacher-course
-    *ngIf="this.selectedCourse !== undefined"
-    [course]="this.selectedCourse"
-    class="w-full"
-    (shouldReload)="shouldReload($event)"
-    />
+  <label class="text-center" for="">¿Tu curso no aparece en la lista?</label>
+  <a class="text-center text-blue-500 underline cursor-pointer"
+    [routerLink]="['/home/teacher/new-course']">
+    Crear un curso
+  </a>
+
 </div>

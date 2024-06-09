@@ -14,6 +14,9 @@ import { DocumentModule } from 'src/document/document.module';
 import { DocumentService } from 'src/document/document.service';
 import { FilesService } from 'src/files/files.service';
 import { FilesModule } from 'src/files/files.module';
+import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
+import { CalendarModule } from 'src/calendar/calendar.module';
+import { CalendarService } from 'src/calendar/calendar.service';
 
 @Module({
   imports: [
@@ -21,6 +24,7 @@ import { FilesModule } from 'src/files/files.module';
     TopicModule,
     DocumentModule,
     FilesModule,
+    CalendarModule,
   ],
   providers: [
     GradeService,
@@ -29,6 +33,7 @@ import { FilesModule } from 'src/files/files.module';
     TopicService,
     DocumentService,
     FilesService,
+    CalendarService,
   ],
   exports: [TopicModule, DocumentModule],
   controllers: [GradeController],

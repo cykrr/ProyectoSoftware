@@ -41,10 +41,11 @@ export class UsersService {
     return 'unknown';
   }
 
-  async findTeacher(id: number): Promise<Teacher | null> {
+  async findTeacher(id: number | undefined): Promise<Teacher | null> {
     // Also get course data
+    if (!id) return null;
     return await this.teacherRepo.findOne({
-      where: { id },
+      where: { id: id! },
       relations: [
         'assignedCourses',
         'assignedCourses.topic.grade',
