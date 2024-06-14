@@ -11,7 +11,7 @@ import { Course } from 'src/courses/course.entity';
 export class UsersService {
   addTeacherCourse(teacher: Teacher, course: Course) {
     if (!teacher) {
-      throw new NotFoundException("No existe el profesor")
+      throw new NotFoundException('No existe el profesor');
     }
 
     if (teacher.assignedCourses == null) {
@@ -51,6 +51,7 @@ export class UsersService {
         'assignedCourses.topic.grade',
         'assignedCourses.topic.grade.students',
         'assignedCourses.assignedTeacher',
+        'assignedCourses.calendarEntries',
       ],
     });
   }

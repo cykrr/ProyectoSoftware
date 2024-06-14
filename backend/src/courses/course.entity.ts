@@ -36,6 +36,6 @@ export class Course {
   @JoinTable()
   documents: MDocument[];
 
-  @OneToMany(() => CalendarEntry, (entry) => entry.course)
+  @OneToMany(() => CalendarEntry, (entry) => entry.course, { cascade: true })
   calendarEntries: CalendarEntry[];
 }

@@ -1,1 +1,151 @@
-<p>teacher-calendar works!</p>
+<div id="activityPopup" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
+  *ngIf="this.showActivityPopup">
+  <div class="bg-white p-5 rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">Crear Actividad</h2>
+    <form [formGroup]="activityForm" (ngSubmit)="onAddActivitySubmit()">
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700">Nombre actividad</label>
+        <input type="text" id="name" class="border border-gray-300 rounded-md p-2 w-full" formControlName="name" />
+      </div>
+      <div class="mb-4">
+        <label for="date" class="block text-gray-700">Día actividad</label>
+        <input type="date" id="date" class="border border-gray-300 rounded-md p-2 w-full" formControlName="date" />
+      </div>
+      <div class="mb-4">
+        <label for="description" class="block text-gray-700">Activity Description</label>
+        <textarea id="description" class="border border-gray-300 rounded-md p-2 w-full" formControlName="description"></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="bg-green-500 rounded-md text-white px-4 py-2">Create</button>
+        <button type="button" class="bg-red-500 rounded-md text-white px-4 py-2 ml-2"
+                (click)="this.showActivityPopup = false">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="editActivityPopup" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
+  *ngIf="this.showEditActivityFormPopup">
+  <div class="bg-white p-5 rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">Editar Actividad</h2>
+    <form [formGroup]="editActivityForm2" (ngSubmit)="onEditActivityFormSubmit()">
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700">Nombre actividad</label>
+        <input type="text" id="name" class="border border-gray-300 rounded-md p-2 w-full" formControlName="name" />
+      </div>
+      <div class="mb-4">
+        <label for="date" class="block text-gray-700">Día actividad</label>
+        <input type="date" id="date" class="border border-gray-300 rounded-md p-2 w-full" formControlName="date" />
+      </div>
+      <div class="mb-4">
+        <label for="description" class="block text-gray-700">Activity Description</label>
+        <textarea id="description" class="border border-gray-300 rounded-md p-2 w-full" formControlName="description"></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Editar</button>
+        <button type="button" class="bg-red-500 rounded-md text-white px-4 py-2 ml-2"
+                (click)="this.showEditActivityFormPopup = false">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div id="editActivityPopup"
+     *ngIf="showEditActivityPopup"
+     class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
+     >
+
+    <div class="bg-white p-5 rounded-lg">
+      <h2 class="text-2xl font-semibold mb-4">Editar Actividad</h2>
+      <form [formGroup]="editActivityForm" (ngSubmit)="onEditActivitySubmit()">
+        <div class="mb-4">
+          <label for="name" class="block text-gray-700">Seleccione actividad a modificar</label>
+            <fieldset>
+            <div *ngFor="let event of this.selDay?.events" class="flex flex-row w-auto">
+              <input type="radio" formControlName="event" name="event" id="event.{{event.id}}" class="border border-gray-300 rounded-md m-2" value="{{event.id}}" >
+              <label for="event.{{event.id}}">{{event.name}}</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Editar</button>
+          <button type="button" class="bg-red-500 rounded-md text-white px-4 py-2 ml-2"
+                  (click)="this.showEditActivityPopup = false">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<div class="m-5 flex flex-col gap-2">
+
+  <div class="bg-orange-100">
+    <div class="m-2" id="header">
+      <label class="font-semibold text-3xl">
+        {{this.course?.name}} {{this.course?.topic?.grade?.grade}}°{{this.course?.topic?.grade?.gradePoint}}
+      </label>
+      <p class="">
+        Alumnos inscritos: {{this.course?.topic?.grade?.students?.length}}
+      </p>
+      <p class="">
+        Profesor encargado: {{this.course?.assignedTeacher?.firstName}} {{this.course?.assignedTeacher?.lastName}}
+      </p>
+    </div>
+  </div>
+
+  <div id="monthSelector" class="flex justify-center bg-purple-200">
+    <div class="w-[130px] flex flex-row justify-between">
+      <div id="leftIconHolder">
+        <fa-icon [icon]="faAngleLeft" class="cursor-pointer"
+                (click)="this.selectedMonth = ((this.selectedMonth -1 < 0 ) ? this.selectedMonth : this.selectedMonth - 1); ngOnInit()"/>
+      </div>
+      <label for="" class="text-lg text-center">
+        {{this.months[this.selectedMonth]}}
+      </label>
+      <div id="rightIconHolder">
+        <fa-icon [icon]="faAngleRight" class="cursor-pointer"
+                (click)="this.selectedMonth = ((this.selectedMonth +1 > this.months.length -1 ) ? this.selectedMonth : this.selectedMonth + 1); ngOnInit()"/>
+      </div>
+    </div>
+  </div>
+  <table style="border-collapse: collapse;">
+    <tr>
+      <th *ngFor="let day of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']"
+          class="font-semibold border" >
+        {{day}}
+      </th>
+    </tr>
+    <tr *ngFor="let week of this.weeks">
+      <td *ngFor="let day of week.days"
+          class="cursor-pointer w-32 border" (click)="onDayClick(day)" [ngClass]="this.selectedDay === day.id ? 'outline outline-1 outline-blue-400' : ''" >
+        <div class="flex flex-col gap-1 min-h-16 p-2" >
+          <label for="" class="text-gray-500 text-right mr-1">
+            {{day.id ? day.id : ''}}
+          </label>
+          <label for="" *ngFor="let event of day.events">
+            - {{event.name}}
+          </label>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="flex justify-end gap-2">
+    <button class="bg-green-500 rounded-2xl text-white p-2 w-auto"
+      (click)="onAddActivityClick()">
+      Agregar actividad
+    </button>
+    <button class="bg-blue-500 rounded-2xl text-white p-2 w-auto"
+      (click)="onEditActivityClick()">
+      Editar actividad
+    </button>
+    <button class="bg-red-500 rounded-2xl text-white px-2 py-1 w-auto">
+      Eliminar actividad
+    </button>
+  </div>
+</div>

@@ -1,5 +1,5 @@
-import { Course } from "src/courses/course.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Course } from 'src/courses/course.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CalendarEntry {
@@ -8,6 +8,12 @@ export class CalendarEntry {
 
   @Column()
   date: Date;
+
+  @Column()
+  name: string;
+
+  @Column()
+  description?: string;
 
   @ManyToOne(() => Course, (course) => course.calendarEntries)
   course: Course;

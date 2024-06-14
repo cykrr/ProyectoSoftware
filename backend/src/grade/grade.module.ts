@@ -14,7 +14,6 @@ import { DocumentModule } from 'src/document/document.module';
 import { DocumentService } from 'src/document/document.service';
 import { FilesService } from 'src/files/files.service';
 import { FilesModule } from 'src/files/files.module';
-import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
 import { CalendarModule } from 'src/calendar/calendar.module';
 import { CalendarService } from 'src/calendar/calendar.service';
 

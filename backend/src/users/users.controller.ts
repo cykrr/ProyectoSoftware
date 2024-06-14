@@ -12,10 +12,10 @@ export class UsersController {
   @Get('')
   async find(@Headers() headers: Headers): Promise<string> {
     const token = headers['authorization']?.split(' ')[1];
-    console.log("[UserController] Token", token)
+    console.log('[UserController] Token', token);
     const user = await this.tokenService.decodeToken(token);
     if (!user) {
-      return null
+      return null;
     }
     // console.log('User', user)
     const userObject = await this.usersService.find(user.userId);
@@ -29,9 +29,9 @@ export class UsersController {
   @Get('teacher')
   async findTeacher(@Headers() headers: Headers): Promise<object> {
     const token = headers['authorization']?.split(' ')[1];
-    console.log("[UserController] Token", token)
+    console.log('[UserController] Token', token);
     const user = await this.tokenService.decodeToken(token);
-    console.log("[UserController] User", user)
+    console.log('[UserController] User', user);
     const teacherObj = await this.usersService.findTeacher(user?.userId);
     if (!teacherObj) {
       return {

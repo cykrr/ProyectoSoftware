@@ -4,43 +4,26 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Course } from './course.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
-import { Student, Teacher, User } from 'src/users/user.entity';
 import { Grade } from 'src/grade/grade.entity';
-import { Topic, Unidad } from 'src/topic/topic.entity';
 import { DocumentModule } from 'src/document/document.module';
-import { MDocument } from 'src/document/mdocument.entity';
 import { DocumentService } from 'src/document/document.service';
+import { CalendarModule } from 'src/calendar/calendar.module';
+import { CalendarService } from 'src/calendar/calendar.service';
 
 @Module({
-  providers: [CoursesService, UsersService, DocumentService],
+  providers: [CoursesService, UsersService, DocumentService, CalendarService],
   imports: [
-    TypeOrmModule.forFeature([
-      MDocument,
-      Course,
-      User,
-      Teacher,
-      Student,
-      Grade,
-      Topic,
-    ]),
-    CoursesModule,
+    CalendarModule,
     UsersModule,
     DocumentModule,
+    TypeOrmModule.forFeature([Course, Grade]),
   ],
   exports: [
-    CoursesService,
-    TypeOrmModule.forFeature([
-      MDocument,
-      Course,
-      User,
-      Teacher,
-      Student,
-      Grade,
-      Topic,
-    ]),
+    CalendarModule,
+    TypeOrmModule.forFeature([Course, Grade]),
     DocumentModule,
   ],
 })
 export class CoursesModule {
-  constructor(private coursesService: CoursesService) {}
+  constructor() {}
 }

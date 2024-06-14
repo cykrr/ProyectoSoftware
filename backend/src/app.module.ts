@@ -29,7 +29,6 @@ import { SessionModule } from './session/session.module';
 import { FilesModule } from './files/files.module';
 import { Connection } from 'mongoose';
 import { MDocument } from './document/mdocument.entity';
-import { TopicModule } from './topic/topic.module';
 import { TopicController } from './topic/topic.controller';
 import { FilesController } from './files/files.controller';
 import { FilesService } from './files/files.service';
@@ -102,17 +101,17 @@ export class AppModule {
     @InjectConnection() private conn: Connection,
   ) {}
   async onModuleInit() {
-    console.log("dropall")
+    console.log('dropall');
     await this.dataSource.dropDatabase();
     await this.dataSource.synchronize();
     await this.conn.db.dropDatabase();
 
-    let grade = await this.gradeService.create({
+    const grade = await this.gradeService.create({
       grade: 1,
       gradePoint: 'A',
     });
 
-    let grade2 = await this.gradeService.create({
+    const grade2 = await this.gradeService.create({
       grade: 2,
       gradePoint: 'B',
     });

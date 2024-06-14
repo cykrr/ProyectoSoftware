@@ -6,14 +6,12 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { CoursesService } from 'src/courses/courses.service';
+import { CoursesService } from './courses.service';
 import { GradeService } from 'src/grade/grade.service';
 import { TopicService } from 'src/topic/topic.service';
 import { RecvCreateCourseDto } from './recv-create-course.dto';
 import { UsersService } from 'src/users/users.service';
-import { create } from 'domain';
-import { DocumentService } from 'src/document/document.service';
-import { AlreadyHasCourseError } from 'src/errors/already-has-course.error';
+import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
 
 @Controller('courses')
 export class CourseController {
@@ -69,7 +67,7 @@ export class CourseController {
     } catch (e) {
       return { success: false, message: e.message };
     }
-    return { success: true, message: 'Course created', data : course};
+    return { success: true, message: 'Course created', data: course };
   }
   @Get()
   async getCourses(): Promise<object> {
@@ -108,6 +106,31 @@ export class CourseController {
     };
   }
 
+  @Post(':id/calendar/edit_entry')
+  async editEntry(
+    @Param('id') id: number,
+    @Body()
+    body: CalendarEntry,
+  ): Promise<object> {
+    console.log(body)
+    const editedEntry = await this.courseService.editCalendarEntry({
+      id: body.id,
+      name: body.name,
+      description: body.description,
+      date: body.date,
+    });
+    if (!editedEntry) {
+      return {
+        success: false,
+        message: 'Entry not found',
+      };
+    }
+
+    return {
+      success: true,
+      data: editedEntry,
+    };
+  }
 
   @Post(':id/addfile/:file_id')
   async addFileToCourse(
@@ -129,6 +152,34 @@ export class CourseController {
     return {
       success: true,
       message: 'File added to course',
+    };
+  }
+
+  @Post(':id/calendar/add_entry')
+  async addCalendarEntry(
+    @Param('id') courseId: number,
+    @Body() body: { date: string; name: string; description: string },
+  ): Promise<object> {
+    const ddate = new Date(body.date);
+    console.log(body)
+    const course = await this.courseService.findCourse(courseId);
+    if (!course) {
+      return {
+        success: false,
+        message: `Course ${courseId} not found`,
+      };
+    }
+    const newEntry = await this.courseService.createCalendarEntry({
+      date: ddate,
+      name: body.name,
+      description: body.description,
+    });
+
+    course.calendarEntries.push(newEntry);
+    this.courseService.update(course);
+    return {
+      success: true,
+      message: 'Calendar entry added',
     };
   }
 

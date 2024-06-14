@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Course } from './course.entity';
 import { CreateCourseDto } from './create_course.dto';
-import { BResponse } from 'src/common';
 import { Unidad } from 'src/topic/topic.entity';
 import { DocumentService } from 'src/document/document.service';
 import { AlreadyHasCourseError } from 'src/errors/already-has-course.error';
+import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
+import { CalendarService } from 'src/calendar/calendar.service';
 
 @Injectable()
 export class CoursesService {
@@ -14,6 +15,7 @@ export class CoursesService {
     @InjectRepository(Course)
     private courseRepository: Repository<Course>,
     private documentService: DocumentService,
+    private calendarService: CalendarService,
   ) {}
 
   async update(course: DeepPartial<Course>): Promise<Course> {
@@ -56,7 +58,7 @@ export class CoursesService {
   }
 
   async findCourse(id: number): Promise<Course> {
-    return this.courseRepository.findOne({
+    return await this.courseRepository.findOne({
       where: { id },
       relations: [
         'topic.unidades',
@@ -65,5 +67,21 @@ export class CoursesService {
         'calendarEntries',
       ],
     });
+  }
+  async createCalendarEntry(createCalendarEntryDto: {
+    name: string;
+    description: string;
+    date: Date;
+  }): Promise<CalendarEntry> {
+    return await this.calendarService.create(createCalendarEntryDto);
+  }
+
+  async editCalendarEntry(editCalendarEntryDto: {
+    id: number;
+    name: string;
+    description: string;
+    date: Date;
+  }): Promise<CalendarEntry> {
+    return await this.calendarService.update(editCalendarEntryDto);
   }
 }
