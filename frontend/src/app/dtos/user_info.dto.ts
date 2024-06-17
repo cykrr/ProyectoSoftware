@@ -8,7 +8,9 @@ export class UserInfoDto {
   firstName: string | undefined;
   lastName: string | undefined;
   role: string | undefined;
-  assignedCourses: CourseDto[] | undefined;
+  assignedCourses?: CourseDto[] | undefined;
+  courses?: CourseDto[] | undefined;
+  grade?: GradeDto | undefined;
 
 
 }

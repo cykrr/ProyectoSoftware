@@ -40,7 +40,6 @@ export class CoursesService {
       where: { id: courseId },
       relations: ['topic.unidades.documents', 'documents.unidad'],
     });
-    console.log(course);
     if (!course.documents) return [];
     for (const doc of course!.documents) {
       console.log(doc);
@@ -83,5 +82,15 @@ export class CoursesService {
     date: Date;
   }): Promise<CalendarEntry> {
     return await this.calendarService.update(editCalendarEntryDto);
+  }
+
+  async removeCalendarEntry(id: number, entryid: number): Promise<boolean> {
+    const course = await this.findCourse(id);
+    const entry = course.calendarEntries.find((e) => e.id === entryid);
+    if (!entry) return false;
+    else {
+      await this.calendarService.remove(entry);
+      return true;
+    }
   }
 }

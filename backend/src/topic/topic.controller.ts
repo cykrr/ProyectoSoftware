@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -29,13 +32,23 @@ export class TopicController {
     return { success: true, data };
   }
 
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: 1024 * 1024 * 100 } }),
+  )
   @Post(':id/unidades/:unidadId/cargar')
   async cargarDocumento(
     @Param('id') topicId: number,
     @Param('unidadId') unidadId: number,
     @Body() body: { name: string; nombreUnidad: string },
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 100 }),
+          new FileTypeValidator({ fileType: 'application/pdf' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     try {
       return await this.topicService.cargarDocumento(

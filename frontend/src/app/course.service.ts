@@ -12,6 +12,15 @@ export class CourseService {
 
   constructor(private readonly http: HttpClient) {}
 
+  delActivity(id: number, activityId: number) {
+    return this.http.post<ResponseDto<void>>(`${apiUrl}/courses/${id}/calendar/${activityId}/delete`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')!
+      }
+    });
+  }
+
   editActivity(id: number, form: { id: number|null|undefined, name: string|null|undefined, description: string|null|undefined, date: string|null|undefined }) {
     return this.http.post<ResponseDto<EventDto>>(`${apiUrl}/courses/${id}/calendar/edit_entry`, form, {
       headers: {

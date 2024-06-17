@@ -1,3 +1,4 @@
+<!-- Create activity -->
 <div id="activityPopup" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
   *ngIf="this.showActivityPopup">
   <div class="bg-white p-5 rounded-lg">
@@ -26,8 +27,9 @@
   </div>
 </div>
 
+<!-- Edit Activity -->
 <div id="editActivityPopup" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
-  *ngIf="this.showEditActivityFormPopup">
+  *ngIf="this.showEditActivityPopup">
   <div class="bg-white p-5 rounded-lg">
     <h2 class="text-2xl font-semibold mb-4">Editar Actividad</h2>
     <form [formGroup]="editActivityForm2" (ngSubmit)="onEditActivityFormSubmit()">
@@ -46,7 +48,7 @@
       <div class="flex justify-end">
         <button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Editar</button>
         <button type="button" class="bg-red-500 rounded-md text-white px-4 py-2 ml-2"
-                (click)="this.showEditActivityFormPopup = false">
+                (click)="this.showEditActivityPopup = false">
           Cancelar
         </button>
       </div>
@@ -55,16 +57,17 @@
 </div>
 
 
-<div id="editActivityPopup"
-     *ngIf="showEditActivityPopup"
+<!-- Pick Activity -->
+<div id="activityPickerPopup"
+     *ngIf="this.showActivityPickerPopup"
      class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50"
      >
 
     <div class="bg-white p-5 rounded-lg">
-      <h2 class="text-2xl font-semibold mb-4">Editar Actividad</h2>
-      <form [formGroup]="editActivityForm" (ngSubmit)="onEditActivitySubmit()">
+      <h2 class="text-2xl font-semibold mb-4">{{selectActivityMotive[0].toUpperCase() + selectActivityMotive.slice(1)}} Actividad</h2>
+      <form [formGroup]="activityPickerForm" (ngSubmit)="onActivityPickerFormSubmit()">
         <div class="mb-4">
-          <label for="name" class="block text-gray-700">Seleccione actividad a modificar</label>
+          <label for="name" class="block text-gray-700">Seleccione actividad a {{selectActivityMotive}}</label>
             <fieldset>
             <div *ngFor="let event of this.selDay?.events" class="flex flex-row w-auto">
               <input type="radio" formControlName="event" name="event" id="event.{{event.id}}" class="border border-gray-300 rounded-md m-2" value="{{event.id}}" >
@@ -73,9 +76,13 @@
           </fieldset>
         </div>
         <div class="flex justify-end">
-          <button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Editar</button>
+          <button type="submit" class="rounded-md text-white px-4 py-2"
+                  [ngClass]="selectActivityMotive == 'editar' ? 'bg-blue-500' : 'bg-orange-500'">
+            {{selectActivityMotive[0].toUpperCase() + selectActivityMotive.slice(1)}}
+          </button>
           <button type="button" class="bg-red-500 rounded-md text-white px-4 py-2 ml-2"
-                  (click)="this.showEditActivityPopup = false">
+                  (click)="showActivityPickerPopup = false">
+
             Cancelar
           </button>
         </div>
@@ -144,7 +151,8 @@
       (click)="onEditActivityClick()">
       Editar actividad
     </button>
-    <button class="bg-red-500 rounded-2xl text-white px-2 py-1 w-auto">
+    <button class="bg-red-500 rounded-2xl text-white px-2 py-1 w-auto"
+      (click)="onDelActivityClick()">
       Eliminar actividad
     </button>
   </div>

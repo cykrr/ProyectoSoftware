@@ -4,11 +4,9 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
   TableInheritance,
   ChildEntity,
   ManyToOne,
-  JoinTable,
   OneToMany,
 } from 'typeorm';
 
@@ -29,6 +27,8 @@ export class User {
 
   @Column()
   passwordHash: string;
+
+  role?: string;
 }
 
 @ChildEntity()

@@ -1,0 +1,55 @@
+
+<div class="m-5 flex flex-col gap-2">
+
+  <div class="bg-orange-100">
+    <div class="m-2" id="header">
+      <label class="font-semibold text-3xl">
+        {{this.course?.name}} {{this.course?.topic?.grade?.grade}}°{{this.course?.topic?.grade?.gradePoint}}
+      </label>
+      <p class="">
+        Alumnos inscritos: {{this.course?.topic?.grade?.students?.length}}
+      </p>
+      <p class="">
+        Profesor encargado: {{this.course?.assignedTeacher?.firstName}} {{this.course?.assignedTeacher?.lastName}}
+      </p>
+    </div>
+  </div>
+
+  <div id="monthSelector" class="flex justify-center bg-purple-200">
+    <div class="w-[130px] flex flex-row justify-between">
+      <div id="leftIconHolder">
+        <fa-icon [icon]="faAngleLeft" class="cursor-pointer"
+                (click)="this.selectedMonth = ((this.selectedMonth -1 < 0 ) ? this.selectedMonth : this.selectedMonth - 1); ngOnInit()"/>
+      </div>
+      <label for="" class="text-lg text-center">
+        {{this.months[this.selectedMonth]}}
+      </label>
+      <div id="rightIconHolder">
+        <fa-icon [icon]="faAngleRight" class="cursor-pointer"
+                (click)="this.selectedMonth = ((this.selectedMonth +1 > this.months.length -1 ) ? this.selectedMonth : this.selectedMonth + 1); ngOnInit()"/>
+      </div>
+    </div>
+  </div>
+  <table style="border-collapse: collapse;">
+    <tr>
+      <th *ngFor="let day of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']"
+          class="font-semibold border" >
+        {{day}}
+      </th>
+    </tr>
+    <tr *ngFor="let week of this.weeks">
+      <td *ngFor="let day of week.days"
+          class="cursor-pointer w-32 border" (click)="onDayClick(day)" [ngClass]="this.selectedDay === day.id ? 'outline outline-1 outline-blue-400' : ''" >
+        <div class="flex flex-col gap-1 min-h-16 p-2" >
+          <label for="" class="text-gray-500 text-right mr-1">
+            {{day.id ? day.id : ''}}
+          </label>
+          <label for="" *ngFor="let event of day.events">
+            - {{event.name}}
+          </label>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+

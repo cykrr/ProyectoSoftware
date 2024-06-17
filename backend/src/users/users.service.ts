@@ -93,16 +93,40 @@ export class UsersService {
 
   async find(id: number): Promise<User> {
     try {
-      const student = await this.studentRepo.findOneBy({ id });
-      const teacher = await this.teacherRepo.findOneBy({ id });
+      const student = await this.studentRepo.findOne({
+        where: { id },
+        relations: [
+          'grade.topics.course',
+          'grade.topics.course.topic.grade',
+          'grade.topics.course.topic.grade.students',
+          'grade.topics.course.assignedTeacher',
+        ],
+      });
+      const teacher = await this.teacherRepo.findOne({
+        where: { id },
+        relations: [
+          'assignedCourses',
+          'assignedCourses.topic.grade',
+          'assignedCourses.topic.grade.students',
+          'assignedCourses.assignedTeacher',
+          'assignedCourses.calendarEntries',
+        ],
+      });
       return student || teacher;
     } catch (e) {
       console.log(e);
     }
   }
 
-  findByRut(rut: number): Promise<User | null> {
-    return this.userRepository.findOne({ where: { rut } });
+  async findByRut(rut: number): Promise<User | null> {
+    const stud = await this.studentRepo.findOne({ where: { rut } });
+    if (stud) {
+      return { ...stud, role: 'Student' };
+    }
+    const teach = await this.teacherRepo.findOne({ where: { rut } });
+    if (teach) {
+      return { ...teach, role: 'Teacher' };
+    }
   }
 
   async findStudent(id: number): Promise<Student | null> {

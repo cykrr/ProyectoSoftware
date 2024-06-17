@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from './login/login.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { GradeService } from './grade/grade.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ReactiveFormsModule, HttpClientModule, GradeModule ],
+  imports: [RouterModule, RouterOutlet, ReactiveFormsModule, HttpClientModule, GradeModule ],
   providers: [LoginService, UserService, GradeService],
   templateUrl: './app.component.html',
 

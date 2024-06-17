@@ -38,6 +38,9 @@ export class TeacherCalendarComponent {
   faAngleRight = faAngleRight;
 
   showActivityPopup: boolean = false;
+  showActivityPickerPopup: boolean = false;
+  showEditActivityPopup: boolean = false;
+
   activityForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl(''),
@@ -51,13 +54,12 @@ export class TeacherCalendarComponent {
     date: new FormControl(formatDate(new Date(), 'yyyy-MM-dd', 'en'), Validators.required)
   })
 
-  editActivityForm = new FormGroup({
+  activityPickerForm = new FormGroup({
     event: new FormControl(0)
 
   })
 
-  showEditActivityPopup: boolean = false;
-  showEditActivityFormPopup: boolean = false;
+  selectActivityMotive: string = "NONE"
 
   constructor(
     private courseService: CourseService,
@@ -202,30 +204,64 @@ export class TeacherCalendarComponent {
       alert("No hay actividades para editar")
       return
     }
-    this.showEditActivityPopup = true;
+    this.selectActivityMotive = "editar"
+    this.showActivityPickerPopup = true;
   }
 
-  onEditActivitySubmit() {
-    console.log("EditActivitySubmit")
-    this.selectedActivityId = this.editActivityForm.value.event!
+  editActivity() {
+    console.log("EditActivity");
+    console.log("Editando", this.selectedActivity)
+    this.editActivityForm2.controls['date'].setValue(formatDate(this.selectedActivity?.date!, 'yyyy-MM-dd', 'en'))
+    this.editActivityForm2.controls['name'].setValue(this.selectedActivity?.name)
 
-    console.log(this.selDay)
+    this.editActivityForm2.controls['description'].setValue(this.selectedActivity?.description)
+    this.editActivityForm2.controls['id'].setValue(this.selectedActivity?.id)
 
-    const activity = this.selDay!.events!.find((event) => event.id == this.selectedActivityId)
-    console.log("Editando", activity)
-    this.editActivityForm2.controls['date'].setValue(activity?.date)
-    this.editActivityForm2.controls['name'].setValue(activity?.name)
+    this.showActivityPickerPopup = false;
+    this.showEditActivityPopup = true;
 
-    this.editActivityForm2.controls['description'].setValue(activity?.description)
-    this.editActivityForm2.controls['id'].setValue(activity?.id)
 
-    if (!this.editActivityForm.value.event) {
+  }
+
+  delActivity() {
+    console.log("DelActivity");
+    this.courseService.delActivity(this.course!.id!, this.selectedActivityId!).subscribe((res) => {
+      if (res.success) {
+        alert("Actividad eliminada exitosamente")
+        this.showActivityPickerPopup = false;
+        this.ngOnInit().then(() => {
+          // update selected day
+          for (let week of this.weeks) {
+            for (let weekDay of week.days!) {
+              if (weekDay.id == this.selectedDay) {
+                this.selDay = weekDay;
+              }
+            }
+          }
+        });
+      } else {
+        alert(res.message)
+        this.showActivityPickerPopup = false;
+      }
+    });
+  }
+
+  onActivityPickerFormSubmit() {
+    console.log("ActivityPickerSubmit")
+
+    if (!this.activityPickerForm.value.event) {
       alert("Seleccione una actividad primero")
       return
     }
 
-    this.showEditActivityPopup = false;
-    this.showEditActivityFormPopup = true
+    this.selectedActivityId = this.activityPickerForm.value.event!
+    this.selectedActivity = this.selDay?.events?.find((event) => event.id == this.selectedActivityId)
+
+    if (this.selectActivityMotive == "editar") {
+      this.editActivity()
+    } else {
+      this.delActivity()
+    }
   }
 
   onEditActivityFormSubmit() {
@@ -234,7 +270,7 @@ export class TeacherCalendarComponent {
     this.courseService.editActivity(this.course!.id!, this.editActivityForm2.value).subscribe((res) => {
       if (res.success) {
         alert("Actividad editada exitosamente")
-        this.showEditActivityFormPopup = false;
+        this.showEditActivityPopup = false;
         this.editActivityForm2.reset();
         this.ngOnInit().then(() => {
           // update selected day
@@ -249,8 +285,26 @@ export class TeacherCalendarComponent {
       } else {
         this.editActivityForm2.reset();
         alert(res.message)
-        this.showEditActivityFormPopup = false;
+        this.showEditActivityPopup = false;
       }
     });
+  }
+  onDelActivityClick() {
+    if (!this.selectedDay) {
+      alert("Seleccione un día primero")
+      return
+    }
+
+
+    const date = new Date(new Date().getFullYear(), this.selectedMonth, this.selectedDay)
+    console.log("Eliminando en el dia", this.selectedDay)
+    console.log("Eventos en el dia", this.selDay?.events?.length)
+    if (this.selDay?.events?.length == 0) {
+      alert("No hay actividades para editar")
+      return
+    }
+
+    this.selectActivityMotive = "eliminar"
+    this.showActivityPickerPopup = true;
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../user/user.service';
-import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { TeacherCourseComponent } from './teacher-course/teacher-course.component';
 import { UserInfoDto } from '../dtos/user_info.dto';
@@ -9,11 +9,12 @@ import { CourseService } from '../course.service';
 import { Observable, lastValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { CoursePickerComponent } from '../home/course-picker/course-picker.component';
 
 @Component({
   selector: 'app-teacher-home',
   standalone: true,
-  imports: [NgIf, NgFor, NgClass, JsonPipe, RouterModule, TeacherCourseComponent, FontAwesomeModule],
+  imports: [CommonModule, TeacherCourseComponent, FontAwesomeModule, CoursePickerComponent],
   templateUrl: './teacher-home.component.html',
   styleUrl: './teacher-home.component.css'
 })
@@ -21,7 +22,6 @@ export class TeacherHomeComponent {
 teacher: UserInfoDto | undefined;
 selectedCourseId: number | undefined;
 selectedCourse: CourseDto|undefined;
-faAngleRight=faAngleRight
   constructor(userService: UserService, private courseService: CourseService, private router: Router) {
     this.selectedCourseId = -1;
     this.selectedCourse = undefined;

@@ -1,1 +1,1 @@
-export const apiUrl = 'http://localhost:4200/api'
+export const apiUrl = 'https://krr.cl/aulaapi/'

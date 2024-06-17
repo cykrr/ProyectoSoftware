@@ -117,11 +117,11 @@ export class AppModule {
     });
 
     this.usersService.createStudent({
-      firstName: 'Jane',
-      lastName: 'Doe',
+      firstName: 'Juana',
+      lastName: 'Perez',
       rut: 12345678,
       password: 'password',
-      grade,
+      grade: grade2,
     });
 
     this.usersService.createStudent({
@@ -129,7 +129,7 @@ export class AppModule {
       lastName: 'Doe',
       rut: 87654321,
       password: 'password',
-      grade,
+      grade: grade2,
     });
 
     const me = await this.usersService.createTeacher({

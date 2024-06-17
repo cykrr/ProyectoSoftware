@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { GradeDto } from '../dtos/grade.dto';
 import { ResponseDto } from '../dtos/response.dto';
+import { apiUrl } from '../enviroment';
 
 class Response<T> {
   success: boolean | undefined;
@@ -26,7 +27,7 @@ export class GradeService {
   getGrades(): Observable<ResponseDto<GradeDto[]>> {
     const token = localStorage.getItem('token');
     const uid = localStorage.getItem('uid');
-    return this.http.get<ResponseDto<GradeDto[]>>('/api/grades', {
+    return this.http.get<ResponseDto<GradeDto[]>>(`${apiUrl}/grades`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -35,7 +36,7 @@ export class GradeService {
   createCourse(name: string, grade: number, topic: number, attachFilesForm: object): Observable<ResponseDto<CourseDto>> {
     const token = localStorage.getItem('token');
     const uid = Number.parseInt(localStorage.getItem('uid')!);
-    return this.http.post(`/api/courses/`, {
+    return this.http.post(`${apiUrl}/courses/`, {
       //SendCreateCourseDto
       name,
       gradeId: grade,

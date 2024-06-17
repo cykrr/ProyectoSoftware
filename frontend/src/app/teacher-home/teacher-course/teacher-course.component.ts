@@ -76,7 +76,7 @@ export class TeacherCourseComponent {
   ) {
   }
 
-  goBack() { this.router.navigate(['/home/teacher'])}
+  goBack() { this.router.navigate(['/home/'])}
 
   async onCourseClick(course: any) {
     this.selectedCourseId = course.id;

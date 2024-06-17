@@ -112,7 +112,7 @@ export class CourseController {
     @Body()
     body: CalendarEntry,
   ): Promise<object> {
-    console.log(body)
+    console.log(body);
     const editedEntry = await this.courseService.editCalendarEntry({
       id: body.id,
       name: body.name,
@@ -130,6 +130,33 @@ export class CourseController {
       success: true,
       data: editedEntry,
     };
+  }
+
+  @Post(':id/calendar/:entryid/delete')
+  async deleteEntry(
+    @Param('id') id: number,
+    @Param('entryid') entryid: number,
+  ): Promise<object> {
+    const course = await this.courseService.findCourse(id);
+    if (!course) {
+      return {
+        success: false,
+        message: `Course ${id} not found`,
+      };
+    }
+    const entry = course.calendarEntries.find((e) => e.id == entryid);
+    if (!entry) {
+      return {
+        success: false,
+        message: `Entry ${entryid} not found`,
+      };
+    } else {
+      await this.courseService.removeCalendarEntry(id, entryid);
+      return {
+        success: true,
+        message: 'Entry deleted',
+      };
+    }
   }
 
   @Post(':id/addfile/:file_id')

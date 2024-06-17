@@ -14,10 +14,12 @@ export class LoginController {
   async login(@Body() data: LoginDto): Promise<object> {
     const rut = data.rut;
     const password = data.password;
+
     if (!rut || !password) {
       return { success: false, message: 'Invalid data' };
     }
+
     const d = await this.loginService.login(rut, password);
-    return { success: true, data: d };
+    return d;
   }
 }

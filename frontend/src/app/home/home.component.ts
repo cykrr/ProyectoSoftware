@@ -1,38 +1,40 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
+import { UserInfoDto } from '../dtos/user_info.dto';
+import { CoursePickerComponent } from './course-picker/course-picker.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [CoursePickerComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-    userData: object | undefined;
+    userData: UserInfoDto | undefined;
     constructor(
       private router: Router,
       private userService: UserService
     ) {
-      // console.log("home component")
+
+    }
+    ngOnInit() {
+      console.log("Home Component");
+      console.log("[HomeComponent] Getting user info...")
       this.userService.getUserInfo()
       .subscribe({
       next: (res) => {
-        // console.log(res)
+        console.log(res)
         this.userData = res!;
-        if (res?.role === 'Teacher') {
-          this.router.navigate(['/home/teacher'])
-        } else if (res?.role === 'Student') {
-          this.router.navigate(['/home/student'])
-        }
+
       },
       error: (err) => {
         console.log(err);
-        router.navigate(['/login'])
+        console.log("Something went wrong, logging out...")
+        this.router.navigate(['/login'])
       }
     })
-
-
     }
+
 }

@@ -6,14 +6,27 @@ import { EmptyError, lastValueFrom, map } from 'rxjs';
 export const authGuard: CanActivateFn = async (route, state) => {
   const userService = inject(UserService);
   const router = inject(Router);
-  const uinfo = await lastValueFrom(userService.getUserInfo())
-  if (uinfo) {
-    // console.log("uinfo", uinfo)
-    return true;
-  } else {
+  console.log("[AuthGuard]")
+  console.log("Getting user info..")
+  const uinfo = await userService.getUserInfo()
+  if (!uinfo) {
     console.log("[LoginGuard] Redirecting to /login")
     return router.createUrlTree(['/login']);
   }
+  console.log("ok")
+  return true;
+
+  // const uinfo = await lastValueFrom(userService.getUserInfo())
+  // if (!uinfo) {
+  //   alert("err")
+  // }
+  // if (uinfo) {
+  //   console.log("ok")
+  //   return true;
+  // } else {
+  //   console.log("[LoginGuard] Redirecting to /login")
+  //   return router.createUrlTree(['/login']);
+  // }
 
 
 };
