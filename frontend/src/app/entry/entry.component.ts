@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { apiUrl } from '../enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UserInfoDto } from '../dtos/user_info.dto';
+import { UserService } from '../user/user.service';
 
 
 function handleConnectionError(err: Error) {
@@ -18,9 +20,12 @@ function handleConnectionError(err: Error) {
   styleUrl: './entry.component.css'
 })
 export class EntryComponent {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private userService: UserService) {}
+  userData: UserInfoDto | undefined;
 
   ngOnInit() {
+    console.log("App Entry");
+
     this.http.get(apiUrl, {responseType: 'text'}).subscribe({
       next: data => this.handleConnectionSuccess(data),
       error: err => handleConnectionError(err)
@@ -29,6 +34,20 @@ export class EntryComponent {
   }
 
   handleConnectionSuccess(data: string) {
-    this.router.navigate(['/home'])
+    this.userService.getUserInfo().subscribe({
+      next: (res) => {
+        if (res!) {
+          this.userData = res!;
+          this.router.navigate(['/home'])
+        } else {
+          this.router.navigate(['/login'])
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err)
+        this.router.navigate(['/login'])
+      }
+    })
   }
 }

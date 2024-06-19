@@ -155,7 +155,7 @@ export class NewCourseComponent {
       } else {
         if (!res.success) {
           alert(res.message);
-          this.router.navigate(['/login'])
+          // this.router.navigate(['/login'])
         }
         // console.log(res.data)
       }

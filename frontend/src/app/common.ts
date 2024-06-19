@@ -3,11 +3,11 @@ import { throwError } from "rxjs";
 
 export function handleLoginError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      console.error("Connection error");
+      console.error("Error de conexión.");
     } else {
-      console.error(`Backend returned ${error.status} with message ${error.error}`)
+      console.error(`El servidor retornó ${error.status} con el mensaje:  ${error.error}.`)
     }
-    return throwError(()=> "Something bad happened; please try again later.")
+    return throwError(()=> "Ocurrió un problema. Inténtelo de nuevo más tarde.")
 
   }
 

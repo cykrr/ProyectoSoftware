@@ -9,10 +9,9 @@ import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
+    BrowserModule,
     HttpClientModule,
     RouterModule,
-    BrowserModule,
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
 })

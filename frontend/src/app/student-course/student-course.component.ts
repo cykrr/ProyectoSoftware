@@ -4,7 +4,7 @@ import { faAngleLeft, faAngleRight, faEdit, faFilePdf, faXmark } from '@fortawes
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { apiUrl } from '../enviroment';
 import { CourseDto } from '../dtos/course.dto';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserInfoDto } from '../dtos/user_info.dto';
 import { UserService } from '../user/user.service';
@@ -37,19 +37,27 @@ export class StudentCourseComponent {
   constructor(private router: Router,
     private userService: UserService,
     private courseService: CourseService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
+
+    const courseId = +this.route.snapshot.paramMap.get('courseId')!;
+    console.log(courseId!)
+
+    this.selectedCourse = (await this.courseService.getCourse(courseId!).toPromise())!.data;
+    console.log(this.selectedCourse)
+
     console.log("StudentCourse")
     console.log("Getting user data")
     this.userService.getUserInfo().subscribe({
       next: (res) => {
         if (!res) alert("No user found")
+        console.log(res! )
         this.student = res!;
         for (let topic of this.student!.grade!.topics!)
           if (topic.course!) this.courses.push(topic.course!)
 
-        this.selectedCourse = this.courses[0]
         console.log(this.courses)
 
       }

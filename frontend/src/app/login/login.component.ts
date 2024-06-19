@@ -4,11 +4,12 @@ import { LoginService } from './login.service';
 import { Router } from '@angular/router';
 import { EmptyError, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SpinnerComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -23,6 +24,7 @@ export class LoginComponent {
   }
 
 
+  showLoading = false
 
   loginForm = this.formBuilder.group({
     rut: new FormControl('', Validators.required), // RutFormControl
@@ -40,14 +42,17 @@ export class LoginComponent {
       alert(message)
       return
     }
+
+    this.showLoading = true
+
     const response = this.loginService.login(this.loginForm.value.rut!, this.loginForm.value.password!)
     response.subscribe({
       error: (err) => {
+        this.showLoading = false
         console.log(err)
-        // alert(err)
+        alert(err)
       },
       next: (res) => {
-        console.log(res)
         if (res?.success) {
           console.log("Inicio de sesión exitoso")
           console.log(res.data)
@@ -55,7 +60,8 @@ export class LoginComponent {
           localStorage.setItem('uid', res.data.uid!)
           this.router.navigate(['/home'])
         } else {
-          alert(res?.message)
+          this.showLoading = false
+          setTimeout(() => { alert(res?.message) }, 100)
         }
       }
 
