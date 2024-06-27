@@ -1,5 +1,5 @@
 import { DocumentDto } from "./new-file.dto";
-import { TopicDto } from "./grade.dto";
+import { GradeDto, TopicDto } from "./grade.dto";
 import { UserInfoDto } from "./user_info.dto";
 import { UnidadDto } from "./unidad.dto";
 
@@ -26,5 +26,6 @@ export class CourseDto {
   documents?: DocumentDto[] | undefined;
   unidades: UnidadDto[] | undefined;
   calendarEntries: EventDto[] | undefined;
+  grade: GradeDto | undefined;
 }
 

@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { GradeService } from 'src/grade/grade.service';
@@ -139,7 +141,6 @@ export class CourseController {
     };
   }
 
-
   @Post(':id/calendar/edit_entry')
   async editEntry(
     @Param('id') id: number,
@@ -218,6 +219,48 @@ export class CourseController {
     return {
       success: true,
       message: 'File added to course',
+    };
+  }
+
+  @Put(':id/documents')
+  async editDocFromCourse(
+    @Param('id') courseId: number,
+    @Body() body: { id: number; name: string },
+  ) {
+    console.log('Editing document', courseId, body.id, body);
+
+    if (await this.courseService.editDocument(courseId, body)) {
+      return {
+        success: true,
+        message: 'Documento editado',
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Documento no encontrado',
+      };
+    }
+  }
+
+  @Delete(':id/documents/:document_id/')
+  async removeDocFromCourse(
+    @Param('id') courseId: number,
+    @Param('document_id') docId: number,
+  ): Promise<object> {
+    console.log('Removing document', courseId, docId);
+    const course = await this.courseService.findCourse(courseId);
+    if (!course) {
+      return {
+        success: false,
+        message: `Course ${courseId} not found`,
+      };
+    }
+
+    course.documents = course.documents.filter((doc) => doc.id !== docId);
+    this.courseService.update(course);
+    return {
+      success: true,
+      message: 'Document removed from course',
     };
   }
 

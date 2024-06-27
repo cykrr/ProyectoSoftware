@@ -8,6 +8,8 @@ import { DocumentService } from 'src/document/document.service';
 import { AlreadyHasCourseError } from 'src/errors/already-has-course.error';
 import { CalendarEntry } from 'src/calendar/calendar-entry.entity';
 import { CalendarService } from 'src/calendar/calendar.service';
+import { MDocument } from 'src/document/mdocument.entity';
+import { LargeNumberLike } from 'crypto';
 
 @Injectable()
 export class CoursesService {
@@ -31,6 +33,27 @@ export class CoursesService {
     if (course.topic.course?.id != null)
       throw new AlreadyHasCourseError(course.topic.id);
     return await this.courseRepository.save(createdCourse);
+  }
+
+  async editDocument(
+    courseId: number,
+    document: { id: number; name: string },
+  ): Promise<MDocument> {
+    console.log ('edit document', courseId, document)
+    const course = await this.courseRepository.findOne({
+      where: { id: courseId },
+      relations: ['documents'],
+    });
+    console.log("Course", course)
+    if (!course) return null;
+
+    for (const doc of course.documents) {
+      if (doc.id === document.id) {
+        console.log('found');
+        doc.name = document.name;
+        return await this.documentService.save(doc);
+      }
+    }
   }
 
   async obtenerUnidades(courseId: number): Promise<Unidad[]> {
@@ -64,6 +87,7 @@ export class CoursesService {
         'assignedTeacher',
         'topic.grade.students',
         'calendarEntries',
+        'documents',
       ],
     });
   }

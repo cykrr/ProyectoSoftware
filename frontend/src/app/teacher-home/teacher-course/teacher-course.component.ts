@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UnidadDto } from '../../dtos/unidad.dto';
 import { apiUrl } from '../../enviroment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faFilePdf, faAngleRight, faXmark, faEllipsisVertical, faEllipsis, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faFilePdf, faAngleRight, faXmark, faEllipsisVertical, faEllipsis, faRightFromBracket, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AddFileComponent } from '../add-file/add-file.component';
 import { DocumentDto } from '../../dtos/new-file.dto';
 import { ActivatedRoute, Route, Router, RouterLink } from '@angular/router';
@@ -13,12 +13,13 @@ import { UserService } from '../../user/user.service';
 import { CourseService } from '../../course.service';
 import { lastValueFrom } from 'rxjs';
 import { logOff } from '../../common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 
 @Component({
   selector: 'app-teacher-course',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, AddFileComponent, RouterLink],
+  imports: [CommonModule, FontAwesomeModule, AddFileComponent, RouterLink, ReactiveFormsModule],
   templateUrl: './teacher-course.component.html',
   styleUrl: './teacher-course.component.css'
 })
@@ -27,6 +28,7 @@ export class TeacherCourseComponent {
   @Output() shouldReload: EventEmitter<boolean> = new EventEmitter();
 
   logOff = logOff;
+  faTrash = faTrash
 
   teacher: UserInfoDto | undefined;
 
@@ -37,6 +39,13 @@ export class TeacherCourseComponent {
   faXmark = faXmark
   faRightFromBracket = faRightFromBracket
   showAddContent: boolean = false;
+  showEditContent: boolean = false;
+
+
+  editFileForm: FormGroup = new FormGroup({
+    id: new FormControl(-1, Validators.required),
+    name: new FormControl('non', Validators.required),
+  });
 
   selectedCourse: CourseDto | undefined;
   selectedCourseId: number | undefined;
@@ -90,6 +99,88 @@ export class TeacherCourseComponent {
 
   ngOnChanges() {
     console.log(this.course!)
+  }
+
+
+  sendNotification() {
+    const url = "https://mail.google.com/mail/u/0/?fs=1&bcc="
+    const urlend = "&tf=cm"
+    let studentList = '';
+    for (let student of this.selectedCourse!.topic!.grade!.students!) {
+      studentList += student.mail + ';';
+    }
+    window.open(url + studentList + urlend, '_blank')
+  }
+
+  onEditFileClick(file: DocumentDto) {
+    this.editFileForm.controls['id'].setValue(file.id);
+    this.editFileForm.controls['name'].setValue(file.name);
+    this.showEditContent = true;
+  }
+
+  onEditFileFormSubmit() {
+    if (!this.editFileForm.valid) {
+      console.log(this.editFileForm.controls['name'].errors)
+      alert('Por favor ingrese un nombre');
+      return
+    }
+    console.log("Editing file", this.selectedCourse?.id, this.editFileForm.value)
+    this.courseService.editFile(this.selectedCourse!.id!, this.editFileForm.value).subscribe({
+      next: (res) => {
+        console.log(res)
+        if (!res.success) {
+          alert(res.message)
+        } else {
+          this.showEditContent = false;
+          alert("Archivo editado exitosamente")
+          this.courseService.getCourse(this.selectedCourseId!).subscribe({
+            next: (res) => {
+              if (!res.success) {
+                alert(res.message)
+                this.router.navigate(['/home/teacher'])
+              } else {
+                this.selectedCourse = res.data;
+              }
+            }
+          })
+          this.shouldReload.emit(true);
+        }
+      },
+      error: (err) => {
+        alert("Error editando archivo")
+        console.log(err)
+      }
+    })
+  }
+
+  deleteFile(file: DocumentDto) {
+    console.log("Deleting file", this.selectedCourse?.id, file.id)
+    this.courseService.delFile(this.selectedCourse!.id!, file.id!).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          alert(res.message)
+        } else {
+          alert("Archivo eliminado exitosamente")
+          this.courseService.getCourse(this.selectedCourseId!).subscribe({
+            next: (res) => {
+              if (!res.success) {
+                alert(res.message)
+                this.router.navigate(['/home/teacher'])
+              } else {
+                this.selectedCourse = res.data;
+              }
+            }
+          })
+          this.shouldReload.emit(true);
+        }
+      },
+      error: (err) => {
+        alert("Error eliminando archivo")
+        console.log(err)
+      }
+    })
+
+
   }
 
 

@@ -117,19 +117,21 @@ export class AppModule {
     });
 
     this.usersService.createStudent({
-      firstName: 'Juana',
-      lastName: 'Perez',
+      firstName: 'Oscar',
+      lastName: 'Rojas',
       rut: 12345678,
       password: 'password',
       grade: grade2,
+      mail: 'oscar.rojas.g@mail.pucv.cl',
     });
 
     this.usersService.createStudent({
-      firstName: 'Alice',
-      lastName: 'Doe',
+      firstName: 'Sebastian',
+      lastName: 'Jeria',
       rut: 87654321,
       password: 'password',
       grade: grade2,
+      mail: 'sebastian.jeria.l@mail.pucv.cl',
     });
 
     const me = await this.usersService.createTeacher({

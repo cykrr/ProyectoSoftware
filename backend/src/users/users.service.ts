@@ -81,11 +81,7 @@ export class UsersService {
       throw new Error('User already exists');
     }
     const u = this.studentRepo.create({
-      firstName: arg0.firstName,
-      lastName: arg0.lastName,
-      rut: arg0.rut,
-      passwordHash: this.hashPassword(arg0.password),
-      grade: arg0.grade,
+      ...arg0,
     });
 
     return await this.studentRepo.save(u);

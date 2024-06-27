@@ -28,6 +28,9 @@ export class User {
   @Column()
   passwordHash: string;
 
+  @Column()
+  mail?: string;
+
   role?: string;
 }
 

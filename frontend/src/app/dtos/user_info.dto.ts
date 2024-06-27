@@ -11,6 +11,5 @@ export class UserInfoDto {
   assignedCourses?: CourseDto[] | undefined;
   courses?: CourseDto[] | undefined;
   grade?: GradeDto | undefined;
-
-
+  mail?: string | undefined;
 }
