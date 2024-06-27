@@ -1,4 +1,3 @@
-
 <div id="main" class='flex flex-row m-2.5 gap-2'>
   <div class='flex flex-col min-w-48 gap-2'>
 
@@ -13,9 +12,9 @@
         <div *ngFor="let course of this.courses" class="flex flex-row gap-2">
           <div
           [ngClass]="selectedCourseId === course?.id ? 'bg-blue-400 font-semibold' : 'bg-blue-200'"
-               class="cursor-pointer w-full px-2"
-               (click)="onCourseClick(course!)"
-               id="{{course!.id}}">
+              class="cursor-pointer w-full px-2"
+              (click)="onCourseClick(course!)"
+              id="{{course!.id}}">
             {{course!.name + '  ' + course!.topic?.grade?.grade + '°' + course!.topic?.grade?.gradePoint}}
           </div>
         </div>
@@ -29,9 +28,14 @@
     /> -->
 
   <div class="w-full flex flex-col gap-5 mr-20" *ngIf="this.selectedCourse !== undefined">
-    <div class="flex flex-col gap-1 align-middle w-full bg-yellow-100 p-5 gap-2 ">
-      <div class="font-semibold text-2xl">
-        {{this.selectedCourse!.name + "  " + this.selectedCourse!.topic?.grade?.grade + "°" + this.selectedCourse!.topic?.grade?.gradePoint}}
+    <div class="flex flex-col align-middle w-full bg-yellow-100 p-5 gap-2 ">
+      <div class="flex flex-row justify-between">
+        <div class="font-semibold text-2xl">
+          {{this.selectedCourse!.name + "  " + this.selectedCourse!.topic?.grade?.grade + "°" + this.selectedCourse!.topic?.grade?.gradePoint}}
+        </div>
+        <div title="Cerrar Sesión" (click)="logOff()">
+          <fa-icon [icon]="faRightFromBracket" class="cursor-pointer fa-lg"></fa-icon>
+        </div>
       </div>
       <div>
         {{ "Alumnos inscritos: " + this.selectedCourse.topic?.grade?.students?.length}}
@@ -42,7 +46,7 @@
     <div class="flex flex-col gap-2">
 
       <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex"
-       [routerLink]="['/home/student/courses/' + this.selectedCourse.id?.toString() + '/calendar']"
+      [routerLink]="['/home/student/courses/' + this.selectedCourse.id?.toString() + '/calendar']"
 
         >
         <label for="">

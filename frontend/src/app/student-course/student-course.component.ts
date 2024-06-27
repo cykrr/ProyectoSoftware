@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AddFileComponent } from '../teacher-home/add-file/add-file.component';
-import { faAngleLeft, faAngleRight, faEdit, faFilePdf, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faEdit, faFilePdf, faXmark, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { apiUrl } from '../enviroment';
 import { CourseDto } from '../dtos/course.dto';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { UserInfoDto } from '../dtos/user_info.dto';
 import { UserService } from '../user/user.service';
 import { CourseService } from '../course.service';
+import { logOff } from '../common';
 
 @Component({
   selector: 'app-student-course',
@@ -22,7 +23,9 @@ export class StudentCourseComponent {
   faFilePdf = faFilePdf
   faAngleRight = faAngleRight
   faAngleLeft = faAngleLeft
+  faRightFromBracket = faRightFromBracket
   faXmark = faXmark
+  logOff = logOff
 
   apiUrl: string = apiUrl
 
