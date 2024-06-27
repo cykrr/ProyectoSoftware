@@ -109,9 +109,23 @@ export class AddFileComponent {
     const target = ev.target as HTMLInputElement;
     const file = target.files?.item(0);
     console.log(this.topic?.unidades)
-    if (file) {
-      this.file = file;
-      console.log(file)
+
+    const MAX_SIZE = 1024 * 1024 * 10 // 10 Mb
+
+    console.log(file!.type)
+    if (file && file.size > MAX_SIZE) {
+      target.value = "";
+      alert("Error: El tamaño máximo permitido es 10MB");
+      return;
     }
+
+    if (file && file.type !== "application/pdf") {
+      target.value = "";
+      alert("Error: Solo se permiten archivos en formato PDF");
+      return;
+    }
+
+    this.file = file!
   }
+
 }
