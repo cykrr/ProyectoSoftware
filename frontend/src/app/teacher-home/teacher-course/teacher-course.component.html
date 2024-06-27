@@ -3,100 +3,109 @@
   (onFileUploadSuccess)="onFileUploadSuccess($event)"
   [topic]="this.selectedCourse?.topic!"
 />
+<div class="m-2.5">
+  <div class="flex justify-end mt-5 mr-2">
+    <div title="Cerrar Sesión" (click)="logOff()">
+      <fa-icon [icon]="faRightFromBracket" class="cursor-pointer"></fa-icon>
+    </div>
+  </div>
+  <div id="main" class='flex flex-row m-2.5 gap-2'>
+    <div class='flex flex-col min-w-48 gap-2'>
 
-<div id="main" class='flex flex-row m-2.5 gap-2'>
-  <div class='flex flex-col min-w-48 gap-2'>
+        <div class="bg-blue-100 font-semibold text-lg p-2 justify-between items-center flex p-2">
+          <label for="">
+            Tus cursos
+          </label>
+          <div title="Salir">
+            <fa-icon [icon]="faXmark" class="cursor-pointer" (click)="goBack()"></fa-icon>
 
-      <div class="bg-blue-100 font-semibold text-lg p-2 justify-between items-center flex p-2">
-        <label for="">
-          Tus cursos
-        </label>
-        <fa-icon [icon]="faXmark" class="cursor-pointer" (click)="goBack()"></fa-icon>
-      </div>
-
-      <div class="flex flex-col gap-1 align-middle">
-        <div *ngFor="let course of teacher?.assignedCourses" class="flex flex-row gap-2">
-          <div [ngClass]="{'bg-blue-400 font-semibold': selectedCourseId === course.id, 'bg-blue-200': selectedCourseId !== course.id}"
-               class="cursor-pointer w-full px-2"
-               (click)="onCourseClick(course)"
-               id="{{course.id}}">
-            {{course?.name + '  ' + course?.topic?.grade?.grade + '°' + course?.topic?.grade?.gradePoint}}
           </div>
         </div>
-        <a [routerLink]="['/home/teacher/new-course']" class="bg-blue-400 font-semibold cursor-pointer w-full px-2">
-          Nuevo
-        </a>
-      </div>
-  </div>
-  <!-- <app-teacher-course
-    *ngIf="this.selectedCourse !== undefined"
-    [course]="this.selectedCourse"
-    class="w-full"
-    (shouldReload)="shouldReload($event)"
-    /> -->
 
-  <div class="w-full flex flex-col gap-5 mr-20" *ngIf="this.selectedCourse !== undefined">
-    <div class="flex flex-col gap-1 align-middle w-full bg-yellow-100 p-5 gap-2 ">
-      <div class="font-semibold text-2xl">
-        {{this.selectedCourse.name + "  " + this.selectedCourse.topic?.grade?.grade + "°" + this.selectedCourse.topic?.grade?.gradePoint}}
-      </div>
-      <div>
-        {{ "Alumnos inscritos: " + this.selectedCourse.topic?.grade?.students?.length}}
-        <br>
-        {{ "Profesor encargado: " + this.selectedCourse.assignedTeacher?.firstName + " " + this.selectedCourse.assignedTeacher?.lastName}}
-      </div>
-    </div>
-    <div class="flex flex-col gap-2">
-
-      <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex"
-       [routerLink]="['/home/teacher/courses/' + this.selectedCourse.id?.toString() + '/calendar']"
-
-        >
-        <label for="">
-          Ver/Editar calendario
-        </label>
-        <fa-icon [icon]="faAngleRight"></fa-icon>
-      </div>
-
-      <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex">
-        <label for="">
-          Enviar notificación
-        </label>
-        <fa-icon [icon]="faAngleRight"></fa-icon>
-      </div>
-
-      <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex"
-        (click)="showAddContent = !showAddContent">
-        <label for="">
-          Agregar contenido
-        </label>
-        <fa-icon [icon]="faAngleRight"></fa-icon>
-
-      </div>
-      <div class="bg-gray-100 p-5 w-full">
-        <div *ngFor="let unidad of this.selectedCourse.unidades">
-          <div class="flex justify-between w-full items-center">
-            <label for="" class="font-semibold">
-              {{unidad.name}}
-            </label>
-            <fa-icon [icon]="faEdit" class="cursor-pointer"/>
-          </div>
-          <div *ngFor="let file of unidad.documents">
-            <div class="flex justify-between w-full items-center pl-2">
-              <div class="flex gap-3">
-                <fa-icon [icon]="faFilePdf" class="cursor-pointer" transform="grow-6"/>
-                <a href="{{apiUrl}}/files/{{file.fileid}}" class="text-blue-900" target="_blank">{{file.name}}</a>
-              </div>
-              <fa-icon [icon]="faEdit" class="cursor-pointer"/>
+        <div class="flex flex-col gap-1 align-middle">
+          <div *ngFor="let course of teacher?.assignedCourses" class="flex flex-row gap-2">
+            <div [ngClass]="{'bg-blue-400 font-semibold': selectedCourseId === course.id, 'bg-blue-200': selectedCourseId !== course.id}"
+                class="cursor-pointer w-full px-2"
+                (click)="onCourseClick(course)"
+                id="{{course.id}}">
+              {{course?.name + '  ' + course?.topic?.grade?.grade + '°' + course?.topic?.grade?.gradePoint}}
             </div>
           </div>
+          <a [routerLink]="['/home/teacher/new-course']" class="bg-blue-400 font-semibold cursor-pointer w-full px-2">
+            Nuevo
+          </a>
+        </div>
+    </div>
+    <!-- <app-teacher-course
+      *ngIf="this.selectedCourse !== undefined"
+      [course]="this.selectedCourse"
+      class="w-full"
+      (shouldReload)="shouldReload($event)"
+      /> -->
+
+    <div class="w-full flex flex-col gap-5 mr-20" *ngIf="this.selectedCourse !== undefined">
+      <div class="flex flex-col gap-1 align-middle w-full bg-yellow-100 p-5 gap-2 ">
+        <div class="font-semibold text-2xl">
+          {{this.selectedCourse.name + "  " + this.selectedCourse.topic?.grade?.grade + "°" + this.selectedCourse.topic?.grade?.gradePoint}}
+        </div>
+        <div>
+          {{ "Alumnos inscritos: " + this.selectedCourse.topic?.grade?.students?.length}}
+          <br>
+          {{ "Profesor encargado: " + this.selectedCourse.assignedTeacher?.firstName + " " + this.selectedCourse.assignedTeacher?.lastName}}
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+
+        <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex"
+        [routerLink]="['/home/teacher/courses/' + this.selectedCourse.id?.toString() + '/calendar']"
+
+          >
+          <label for="">
+            Ver/Editar calendario
+          </label>
+          <fa-icon [icon]="faAngleRight"></fa-icon>
+        </div>
+
+        <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex">
+          <label for="">
+            Enviar notificación
+          </label>
+          <fa-icon [icon]="faAngleRight"></fa-icon>
+        </div>
+
+        <div class="bg-blue-200 hover:bg-blue-300 hover:text-gray ease-out duration-100 cursor-pointer p-2 font-semibold cursor-pointer justify-between items-center flex"
+          (click)="showAddContent = !showAddContent">
+          <label for="">
+            Agregar contenido
+          </label>
+          <fa-icon [icon]="faAngleRight"></fa-icon>
+
+        </div>
+        <div class="bg-gray-100 p-5 w-full">
+          <div *ngFor="let unidad of this.selectedCourse.unidades">
+            <div class="flex justify-between w-full items-center">
+              <label for="" class="font-semibold">
+                {{unidad.name}}
+              </label>
+              <fa-icon [icon]="faEdit" class="cursor-pointer"/>
+            </div>
+            <div *ngFor="let file of unidad.documents">
+              <div class="flex justify-between w-full items-center pl-2">
+                <div class="flex gap-3">
+                  <fa-icon [icon]="faFilePdf" class="cursor-pointer" transform="grow-6"/>
+                  <a href="{{apiUrl}}/files/{{file.fileid}}" class="text-blue-900" target="_blank">{{file.name}}</a>
+                </div>
+                <fa-icon [icon]="faEdit" class="cursor-pointer"/>
+              </div>
+            </div>
+
+        </div>
+
+        </div>
 
       </div>
-
-      </div>
-
     </div>
   </div>
-</div>
 
+</div>
 

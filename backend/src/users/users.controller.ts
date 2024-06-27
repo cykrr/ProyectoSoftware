@@ -36,7 +36,7 @@ export class UsersController {
     if (!teacherObj) {
       return {
         success: false,
-        message: 'Token is invalid.',
+        message: 'La sesión expiró.',
       };
     }
     return {

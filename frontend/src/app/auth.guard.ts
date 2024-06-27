@@ -8,7 +8,8 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   console.log("[AuthGuard]")
   console.log("Getting user info..")
-  const uinfo = await userService.getUserInfo()
+  const uinfo = await lastValueFrom(userService.getUserInfo())
+  console.log(uinfo)
   if (!uinfo) {
     console.log("[LoginGuard] Redirecting to /login")
     return router.createUrlTree(['/login']);

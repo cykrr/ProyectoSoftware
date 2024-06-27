@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UnidadDto } from '../../dtos/unidad.dto';
 import { apiUrl } from '../../enviroment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faFilePdf, faAngleRight, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faFilePdf, faAngleRight, faXmark, faEllipsisVertical, faEllipsis, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { AddFileComponent } from '../add-file/add-file.component';
 import { DocumentDto } from '../../dtos/new-file.dto';
 import { ActivatedRoute, Route, Router, RouterLink } from '@angular/router';
@@ -12,6 +12,7 @@ import { UserInfoDto } from '../../dtos/user_info.dto';
 import { UserService } from '../../user/user.service';
 import { CourseService } from '../../course.service';
 import { lastValueFrom } from 'rxjs';
+import { logOff } from '../../common';
 
 
 @Component({
@@ -25,6 +26,8 @@ export class TeacherCourseComponent {
   @Input() course: CourseDto|undefined;
   @Output() shouldReload: EventEmitter<boolean> = new EventEmitter();
 
+  logOff = logOff;
+
   teacher: UserInfoDto | undefined;
 
   apiUrl: string = apiUrl;
@@ -32,6 +35,7 @@ export class TeacherCourseComponent {
   faFilePdf = faFilePdf
   faAngleRight = faAngleRight
   faXmark = faXmark
+  faRightFromBracket = faRightFromBracket
   showAddContent: boolean = false;
 
   selectedCourse: CourseDto | undefined;

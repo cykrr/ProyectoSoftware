@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { UserInfoDto } from '../../dtos/user_info.dto';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { CourseDto } from '../../dtos/course.dto';
+import { logOff } from '../../common';
 
 @Component({
   selector: 'app-course-picker',
@@ -19,6 +20,8 @@ export class CoursePickerComponent {
   user: UserInfoDto | undefined;
   courses: CourseDto[] | undefined;
   faAngleRight=faAngleRight
+  faRightFromBracket = faRightFromBracket
+  logOff = logOff
   constructor(private router: Router) {}
 
   ngOnChanges() {

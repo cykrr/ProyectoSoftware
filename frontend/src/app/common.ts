@@ -5,6 +5,7 @@ export function handleLoginError(error: HttpErrorResponse) {
     if (error.status === 0) {
       console.error("Error de conexión.");
     } else {
+      console.log(error)
       console.error(`El servidor retornó ${error.status} con el mensaje:  ${error.error}.`)
     }
     return throwError(()=> "Ocurrió un problema. Inténtelo de nuevo más tarde.")
@@ -20,4 +21,12 @@ export function toFormData<T extends object>(formValue: T) {
   }
 
   return formData;
+}
+
+
+export function logOff() {
+  localStorage.removeItem('uid');
+  localStorage.removeItem('token');
+  window.location.reload();
+
 }
