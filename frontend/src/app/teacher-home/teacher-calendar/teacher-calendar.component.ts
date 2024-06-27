@@ -272,6 +272,11 @@ export class TeacherCalendarComponent {
   }
 
   onEditActivityFormSubmit() {
+    if (this.editActivityForm2.invalid) {
+      alert("Por favor llene todos los campos")
+      return
+    }
+
     console.log("EditActivityFormSubmit");
     console.log(this.editActivityForm2.value)
     this.courseService.editActivity(this.course!.id!, this.editActivityForm2.value).subscribe((res) => {
