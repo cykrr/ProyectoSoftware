@@ -86,6 +86,8 @@ export class TeacherCalendarComponent {
 
     this.weeks = [];
     const firstDayofMonth = new Date()
+
+
     firstDayofMonth.setMonth(this.selectedMonth)
     firstDayofMonth.setDate(1)
 
@@ -93,15 +95,18 @@ export class TeacherCalendarComponent {
     const lastDayofMonth = new Date()
     lastDayofMonth.setMonth(this.selectedMonth+1)
     lastDayofMonth.setDate(0)
-    console.log(firstDayofMonth, lastDayofMonth)
+    console.log(firstDayofMonth.toUTCString(), lastDayofMonth.toUTCString())
 
     const startDayOfFirstWeek = firstDayofMonth.getDay();
     console.log(startDayOfFirstWeek)
     let zeroCount = 0;
 
     for (let day = firstDayofMonth; day <= lastDayofMonth; day.setDate(day.getDate() + 1)) {
-      console.log(day.getDate(), day)
+
+      // Semana del dia actual
       const week = Math.floor((day.getDate() + zeroCount -1 )/ 7);
+
+      // Inicialización de la semana
       if (!this.weeks[week]) {
         console.log('creating week', week)
         this.weeks[week] = {
@@ -112,15 +117,17 @@ export class TeacherCalendarComponent {
           // console.log("adding empty day")
           this.weeks[week].days?.push({
             id: 0,
-            date: new Date()
+            date: undefined
           })
           zeroCount++;
         }
       }
+
+
       let events: EventDto[] = []
       for (let entry of this.course?.calendarEntries!) {
         const entryDate = new Date(entry.date!)
-        entryDate.setDate(entryDate.getDate() + 1)
+        entryDate.setDate(entryDate.getDate())
         console.log(entryDate.toLocaleDateString(), day.toLocaleDateString())
         if (entryDate.toLocaleDateString() == day.toLocaleDateString()) {
           events.push(entry)

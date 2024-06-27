@@ -12,23 +12,7 @@ export class CourseService {
 
   constructor(private readonly http: HttpClient) {}
 
-  delActivity(id: number, activityId: number) {
-    return this.http.post<ResponseDto<void>>(`${apiUrl}/courses/${id}/calendar/${activityId}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')!
-      }
-    });
-  }
 
-  editActivity(id: number, form: { id: number|null|undefined, name: string|null|undefined, description: string|null|undefined, date: string|null|undefined }) {
-    return this.http.post<ResponseDto<EventDto>>(`${apiUrl}/courses/${id}/calendar/edit_entry`, form, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')!
-      }
-    });
-  }
 
   addFile(courseId: number, file_id: string) {
     return this.http.get(`${apiUrl}/courses/${courseId}/${file_id}`, {
@@ -48,8 +32,26 @@ export class CourseService {
     });
   }
   addCalendarEntry(id: number, form: { date: string|null|undefined, name: string|null|undefined, description: string|null|undefined}) {
-    return this.http.post<ResponseDto<DayDto>>(`${apiUrl}/courses/${id}/calendar/add_entry`, form, {
+    return this.http.post<ResponseDto<EventDto>>(`${apiUrl}/courses/${id}/calendar/add_entry`, form, {
       headers: {
+      }
+    });
+  }
+
+  delActivity(id: number, activityId: number) {
+    return this.http.post<ResponseDto<void>>(`${apiUrl}/courses/${id}/calendar/${activityId}/delete`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')!
+      }
+    });
+  }
+
+  editActivity(id: number, form: { id: number|null|undefined, name: string|null|undefined, description: string|null|undefined, date: string|null|undefined }) {
+    return this.http.post<ResponseDto<EventDto>>(`${apiUrl}/courses/${id}/calendar/edit_entry`, form, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')!
       }
     });
   }

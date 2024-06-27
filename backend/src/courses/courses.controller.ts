@@ -106,18 +106,57 @@ export class CourseController {
     };
   }
 
+  @Post(':id/calendar/add_entry')
+  async addCalendarEntry(
+    @Param('id') courseId: number,
+    @Body() body: { date: string; name: string; description: string },
+  ): Promise<object> {
+    const year = Number.parseInt(body.date.split('-')[0]);
+    const month = Number.parseInt(body.date.split('-')[1]) - 1;
+    const day = Number.parseInt(body.date.split('-')[2]);
+
+    const ddate = new Date(year, month, day, 12, 0, 0, 0);
+    console.log(body);
+    console.log(year, month, day, ddate.toString());
+    const course = await this.courseService.findCourse(courseId);
+    if (!course) {
+      return {
+        success: false,
+        message: `Course ${courseId} not found`,
+      };
+    }
+    const newEntry = await this.courseService.createCalendarEntry({
+      date: ddate,
+      name: body.name,
+      description: body.description,
+    });
+
+    course.calendarEntries.push(newEntry);
+    this.courseService.update(course);
+    return {
+      success: true,
+      message: 'Calendar entry added',
+    };
+  }
+
+
   @Post(':id/calendar/edit_entry')
   async editEntry(
     @Param('id') id: number,
     @Body()
-    body: CalendarEntry,
+    body: { id: number; date: string; name: string; description: string },
   ): Promise<object> {
     console.log(body);
+    const year = Number.parseInt(body.date.split('-')[0]);
+    const month = Number.parseInt(body.date.split('-')[1]) - 1;
+    const day = Number.parseInt(body.date.split('-')[2]);
+
+    const ddate = new Date(year, month, day, 12, 0, 0, 0);
     const editedEntry = await this.courseService.editCalendarEntry({
       id: body.id,
       name: body.name,
       description: body.description,
-      date: body.date,
+      date: ddate,
     });
     if (!editedEntry) {
       return {
@@ -179,34 +218,6 @@ export class CourseController {
     return {
       success: true,
       message: 'File added to course',
-    };
-  }
-
-  @Post(':id/calendar/add_entry')
-  async addCalendarEntry(
-    @Param('id') courseId: number,
-    @Body() body: { date: string; name: string; description: string },
-  ): Promise<object> {
-    const ddate = new Date(body.date);
-    console.log(body)
-    const course = await this.courseService.findCourse(courseId);
-    if (!course) {
-      return {
-        success: false,
-        message: `Course ${courseId} not found`,
-      };
-    }
-    const newEntry = await this.courseService.createCalendarEntry({
-      date: ddate,
-      name: body.name,
-      description: body.description,
-    });
-
-    course.calendarEntries.push(newEntry);
-    this.courseService.update(course);
-    return {
-      success: true,
-      message: 'Calendar entry added',
     };
   }
 
