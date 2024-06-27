@@ -2,44 +2,63 @@
 
 ## Backend
 
-El Framework Backend a utilizar será NestJS. Para instalar la herramienta CLI
-utilizar el comando:
+Para instalar las dependencias del backend, es necesario entrar a la carpeta que lo contiene.
 
 ```
-npm i -g @nestjs/cli
+cd backend; npm install
+```
+
+Este, además requiere que se esté ejecutando la base de datos MongoDB y MySQL/MariaDB
+
+## Base de datos SQL (MariaDB)
+
+Para instalar MariaDB es posible utilizar el paquete 
+[XAMPP](https://www.apachefriends.org/download.html). El cual además posee la herramienta Phpmyadmin que se utilizará para crear una base de datos.
+
+1. Instalar XAMPP
+2. Abrir Panel de control XAMPP
+3. Inicializar servidor Apache2 y MySQL
+4. acceder a la opción "admin" de MySQL desde el panel de control o, acceder a la url http://localhost/phpmyadmin
+5. En la barra de navegación del lado izquierdo, presionar el botón "New" para añadir una base de datos con el nombre `nest`.
+![image](https://github.com/cykrr/ProyectoSoftware/assets/21285912/3502711b-8375-4773-a7e0-580f9149eb21)
+
+
+## Base de datos NoSQL (MongoDB)
+
+Para instalar MongoDB utilizar el siguiente enlace [MongoDB](https://www.mongodb.com/try/download/community), seleccionar
+plataforma y arquitectura correspondientes.
+
+Para ejecutar MongoDB utilizar el comando:
+
+```
+# Ruta en C:\Program Files\MongoDB (Notar que esto se selecciona al instalar, esta es la ruta predeterminada, puede variar).
+'C:\Program Files\MongoDB\bin\mongod.exe'
+```
+
+Finalmente, es posible ejecutar el backend con
+
+```
+npm run start
+# ó
+npx nest start
+# ó
+nest start
 ```
 
 ## Frontend
 
-El Framework Frontend a utilizar será Angular JS. Para instalar la herramienta
-CLI utilizar el comando:
+Al igual que con el backend, instalamos las dependencias NodeJS
 
 ```
-npm i -g @angular/cli
+cd frontend; npm install
 ```
 
-## Base de datos NoSQL (MongoDB)
+luego, podemos ejecutar el frontend con
+```
+npm run start
+# ó
+npx ng serve
+# ó
+ng serve
+```
 
-Se optó por una base de datos no relacional debido a su facilidad para
-almacenar grandes volúmenes de datos de distinto tipo.
-
-Para instalar MongoDB `mongod.exe` puedes utilizar la siguiente página:
-[MongoDB](https://www.mongodb.com/try/download/community)
-
-Para instalar el Shell de MongoDB `mongosh.exe` (para tareas administrativas)
-puedes utilizar la siguiente página
-[MongoDB Shell](https://www.mongodb.com/try/download/shell)
-
-Recuerda añadir ambas herramientas al $PATH.
-
-Para acceder a esta BD desde el backend se utilizará la librería de NodeJS
-`mongoose`
-
-## Base de datos SQL (MariaDB)
-
-Por otro lado se necesitará una BD de tipo relacional para poder almacenar
-información como las cuentas de los usuarios y las asignaciones de Documentos
-correspondientes. Para instalar MariaDB puedes utilizar el paquete 
-[XAMPP](https://www.apachefriends.org/download.html)
-
-Para acceder a esta BD se utilizará la librería `TypeORM`
