@@ -69,7 +69,7 @@
               <div *ngFor = "let unidad of this.selectedTopic?.unidades">
                 <label class="font-bold text-sm text-gray-900">{{unidad.name}}</label>
                 <div class="flex items-center mb-2" *ngFor="let file of unidad.documents">
-                  <input id="checkbox-{{file.fileid}}" type="checkbox" value="" formControlName="checkbox-file.{{file.fileid}}"
+                  <input id="checkbox-{{file.fileid}}" name="checkbox-file.{{file.fileid}}" type="checkbox" value="{{file.fileid}}" formControlName="checkbox-file.{{file.fileid}}"
                     class="w-4 h-4 mr-2 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                   <label for="checkbox-{{file.fileid}}"
                     class="text-sm text-gray-900">

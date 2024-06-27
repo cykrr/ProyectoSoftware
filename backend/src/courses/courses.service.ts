@@ -65,7 +65,6 @@ export class CoursesService {
     });
     if (!course.documents) return [];
     for (const doc of course!.documents) {
-      console.log(doc);
       let match = unidades.find((u) => u.id === doc.unidad.id);
       if (!match) {
         unidades.push({

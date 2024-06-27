@@ -72,6 +72,7 @@ export class NewCourseComponent {
   }
 
   onTopicChange(event: Event) {
+    this.attachFilesForm.reset()
     this.selectedTopicId = Number((event.target as HTMLSelectElement).value);
     console.log(this.selectedTopicId)
     this.selectedTopic = this.selectedGrade?.topics?.find((topic) => topic.id === this.selectedTopicId);
@@ -130,10 +131,17 @@ export class NewCourseComponent {
       return;
     }
     const attachFiles: { documents: string[] } = { documents: [] }
-    Object.keys(this.attachFilesForm['value']).forEach((key, value) => {
-        if (value != 0)
-          attachFiles.documents.push(key.split('.')[1])
+    console.log("XXXXXXXXXX")
+    console.log(this.attachFilesForm['value'])
+    const theForm: any = this.attachFilesForm['value']
+    Object.keys(theForm).forEach((key, value) => {
+      const v = theForm[key]
+      console.log(key + ", " + v)
+      if (v)
+        attachFiles.documents.push(key.split('.')[1])
     });
+    console.log("XXXXXXXXXX")
+
     // console.log(this.newCourseForm.value)
     // console.log(this.attachFilesForm.value)
     // Create the course in the backend
@@ -146,7 +154,7 @@ export class NewCourseComponent {
     ).subscribe((res) => {
       if (res.success) {
         // if succeed
-
+        this.attachFilesForm.reset()
         // console.log('Course created');
         // this.updateCourseFiles()
         this.router.navigate(['/home']);
