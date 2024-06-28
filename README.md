@@ -1,5 +1,16 @@
 # Sistema de Aula Virtual
 
+## Creación del Proyecto
+
+Para instalar el proyecto, puede abrir una terminal de Windows o de Visual Studio Code y escribir el comando
+
+```
+git clone https://github.com/cykrr/ProyectoSoftware.git
+```
+
+Para ingresar a la carpeta del proyecto, escriba `cd ProyectoSoftware` desde la terminal
+
+
 ## Backend
 
 Para instalar las dependencias del backend, es necesario entrar a la carpeta que lo contiene.
