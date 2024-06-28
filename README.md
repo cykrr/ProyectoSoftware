@@ -2,13 +2,11 @@
 
 ## Creación del Proyecto
 
-Para instalar el proyecto, puede abrir una terminal de Windows o de Visual Studio Code y escribir el comando
+Para instalar e ingresar a la carpeta del proyecto, puede abrir una terminal de Windows o de Visual Studio Code y escribir los comandos
 
 ```
-git clone https://github.com/cykrr/ProyectoSoftware.git
+git clone https://github.com/cykrr/ProyectoSoftware.git; cd ProyectoSoftware
 ```
-
-Para ingresar a la carpeta del proyecto, escriba `cd ProyectoSoftware` desde la terminal
 
 
 ## Backend
