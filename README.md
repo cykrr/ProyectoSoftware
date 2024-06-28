@@ -62,3 +62,16 @@ npx ng serve
 ng serve
 ```
 
+## Uso de la aplicación
+
+Para ingresar a la aplicación, puede utilizar las siguientes credenciales:
+
+### Profesor
+
+- RUT: 21256405
+- Contraseña: admin
+
+### Alumno
+
+- RUT: 12345678
+- Contraseña: password
